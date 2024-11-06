@@ -1,6 +1,4 @@
 export * from './App';
-export * from './components/organismos/sidebar/Sidebar';
-export * from './components/organismos/sidebar/SidebardCard';
 export * from './components/templates/HomeTemplate';
 export * from './context/AuthContext';
 export * from './index';

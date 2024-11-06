@@ -1,5 +1,5 @@
 import style, { ThemeProvider } from 'styled-components'
-import {AuthContextProvider, MyRoutes, Light, Dark, Sidebar} from "./index"
+import {AuthContextProvider, MyRoutes, Light, Dark} from "./index"
 import { createContext, useState  } from 'react'
 import {Device} from "./styles/breackpoints"
 export const ThemeContext = createContext(null)
