@@ -1,7 +1,7 @@
 import style, { ThemeProvider } from 'styled-components'
-import {AuthContextProvider, MyRoutes, Light, Dark, Sidebar, MenuHambur} from "./index"
-import { createContext, useState  } from 'react'
-import {Device} from "./styles/breackpoints"
+import { AuthContextProvider, MyRoutes, Light, Dark, Sidebar, MenuHambur } from "./index"
+import { createContext, useState } from 'react'
+import { Device } from "./styles/breackpoints"
 export const ThemeContext = createContext(null)
 function App() {
   const [themeuse, setTheme] = useState("dark");
@@ -16,9 +16,9 @@ function App() {
           <AuthContextProvider>
             <Container className={sidebarOpen ? "active" : ""}>
               <section className="ContentSidebar">
-                <Sidebar state={sidebarOpen} setState={()=>setSidebarOpen(!sidebarOpen)}></Sidebar>
-                </section>
-              <section className="ContentMenuambur"><MenuHambur/></section>
+                <Sidebar state={sidebarOpen} setState={() => setSidebarOpen(!sidebarOpen)}></Sidebar>
+              </section>
+              <section className="ContentMenuambur"><MenuHambur /></section>
               <section className="ContentRoutes">
                 <MyRoutes />
               </section>
@@ -31,7 +31,7 @@ function App() {
   );
 }
 
-const Container = style.main `
+const Container = style.main`
   display: grid;
   grid-template-columns: 1fr;
   background-color: ${({ theme }) => theme.bgtotal};

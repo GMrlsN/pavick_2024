@@ -1,7 +1,7 @@
 import styled from "styled-components";
 export function HomeTemplate() {
     return (<Containeir>
-        <h1>Home Template</h1>
+        <h1>Home PAVICK</h1>
     </Containeir>);
 }
 const Containeir = styled.div` 
