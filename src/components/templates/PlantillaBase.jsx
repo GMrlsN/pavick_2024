@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Header } from "../../index";
 import { useState } from "react";
 
-export function HomeTemplate() {
+export function PlantillaBase() {
     const [state, setState] = useState(false);
     return (
       <Containeir>

@@ -4,7 +4,7 @@ import { createContext, useState } from 'react'
 import { Device } from "./styles/breackpoints"
 export const ThemeContext = createContext(null)
 function App() {
-  const [themeuse, setTheme] = useState("light");
+  const [themeuse, setTheme] = useState("dark");
   const theme = themeuse === "light" ? "light" : "dark";
   const themeStyles = theme === "light" ? Light : Dark;
   const [sidebarOpen, setSidebarOpen] = useState(false)
