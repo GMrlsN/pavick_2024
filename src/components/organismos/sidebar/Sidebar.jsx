@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import {
-  
+
   LinksArray,
   SecondarylinksArray,
   SidebarCard,
   ToggleTema,
 } from "../../../index";
-import {v} from "../../../styles/variables"
+import { v } from "../../../styles/variables"
 import { NavLink } from "react-router-dom";
 
 export function Sidebar({ state, setState }) {
@@ -36,7 +36,7 @@ export function Sidebar({ state, setState }) {
               <span className={state ? "label_ver" : "label_oculto"}>
                 {label}
               </span>
-              
+
             </NavLink>
           </div>
         ))}
@@ -54,11 +54,11 @@ export function Sidebar({ state, setState }) {
               <span className={state ? "label_ver" : "label_oculto"}>
                 {label}
               </span>
-             
+
             </NavLink>
           </div>
         ))}
-        <ToggleTema/>
+        <ToggleTema />
         <Divider />
         {state && <SidebarCard />}
       </Container>
@@ -81,7 +81,7 @@ const Container = styled.div`
     border-radius: 10px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: ${(props)=>props.theme.colorScroll};
+    background-color: ${(props) => props.theme.colorScroll};
     border-radius: 10px;
   }
 
@@ -96,11 +96,11 @@ const Container = styled.div`
     .imgcontent {
       display: flex;
       justify-content: center;
-      align-items:left;
+      align-items: left;
       width: 40px;
       cursor: pointer;
       transition: 0.3s ease;
-      transform: ${({ $isopen }) => ($isopen==="true" ? `scale(1.0)` : `scale(1.5)`)}
+      transform: ${({ $isopen }) => ($isopen === "true" ? `scale(0.7)` : `scale(1.5)`)}
         rotate(${({ theme }) => theme.logorotate});
       img {
         width: 100%;
@@ -108,8 +108,7 @@ const Container = styled.div`
       }
     }
     h2 {
-      display: ${({ $isopen }) => ($isopen==="true" ? `block` : `none`)};
-      font-family: "Georgia", sans-serif;
+      display: ${({ $isopen }) => ($isopen === "true" ? `block` : `none`)};
     }
     @keyframes flotar {
       0% {
@@ -189,7 +188,7 @@ const Main = styled.div`
     transition: all 0.2s;
     z-index: 2;
     transform: ${({ $isopen }) =>
-      $isopen==="true" ? `translateX(162px) rotate(3.142rad)` : `initial`};
+    $isopen === "true" ? `translateX(162px) rotate(3.142rad)` : `initial`};
     color: ${(props) => props.theme.text};
   }
 `;
