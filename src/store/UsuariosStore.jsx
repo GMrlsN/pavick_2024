@@ -11,9 +11,9 @@ export const useUsuariosStore = create((set, get) => ({
         console.log("data del registro del user auth", data);
         if (error) return;
         const datauser = await InsertarUsuarios({
-            idauth: data.user.id,
-            fecharegistro: new Date(),
-            tipouser: "admin",
+            idauth:data.user.id, 
+            fecharegistro:new Date(),
+            tipouser:"admin",
         });
         return datauser;
     },
