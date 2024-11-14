@@ -1,9 +1,7 @@
 import styled from "styled-components";
-//QUITAR COMENTARIO CUANDO ESTE LO DE LOGIN
-import {  BtnCircular, UserAuth, v, ListaMenuDesplegable /*DesplegableUser, useAuthStore*/} from "../../../index";
+import {  BtnCircular, UserAuth, v, ListaMenuDesplegable, DesplegableUser, useAuthStore} from "../../../index";
 export function Header({ stateConfig }) {
-  //QUITAR COMENTARIO CUANDO ESTE LO DE LOGIN
-  //const {signOut} = useAuthStore();
+  const {signOut} = useAuthStore();
   const { user } = UserAuth();
   const funcionXtipo = async (p) => {
     if (p.tipo === "cerrarsesion") {

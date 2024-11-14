@@ -11,6 +11,7 @@ export const useAuthStore = create((set, get) => ({
             return null;
         }
         return data.user;
+        
     },
 
     signOut: async () => {

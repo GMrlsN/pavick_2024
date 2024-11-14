@@ -12,3 +12,16 @@ export const InsertarUsuarios = async (p) => {
     if (data) return data;
 
 }
+
+export const MostrarUsuarios = async () => {
+    const idAuthSupabase = await ObtenerIdAuthSupabase();
+    const { error, data } = await supabase
+      .from("usuarios")
+      .select()
+      .eq("idauth", idAuthSupabase)
+      .maybeSingle();
+  
+    if (data) {
+      return data;
+    }
+  };

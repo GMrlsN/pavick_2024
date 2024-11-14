@@ -1,30 +1,24 @@
 import styled from "styled-components";
-import {BannerEmpresa ,Header, Title} from "../../index";
+import { Header } from "../../index";
 import { useState } from "react";
 
-export function HomeTemplate() {
+export function PaqueteTemplate() {
     const [state, setState] = useState(false);
-
     return (
-    <Container>
+      <Containeir>
         <header className="header">
-        <Header
+            <Header
                 stateConfig={{ state: state, setState: () => setState(!state) }}
             />
         </header>
-        <section className="area1">
-            <Title>PaVick</Title>
-        </section>
-        <section className="main">
-            <BannerEmpresa/>
-        </section>
-        
-    </Container>
+        <section className="area1"></section>
+        <section className="area2"></section>
+        <section className="main"></section>
+      </Containeir>
     );
 }
 
-
-const Container = styled.div` 
+const Containeir = styled.div` 
     height:100vh;
     width:100%;
     background-color:${({ theme }) => theme.bgtotal};
@@ -34,26 +28,34 @@ const Container = styled.div`
     grid-template: 
     "header" 100px
     "area1" 100px
+    "area2" 100px
     "main" auto;
 
     .header{
         grid-area:header;
-        /*background-color:rgba(103,93,241,0.14);*/
+        background-color:rgba(103,93,241,0.14);
         display:flex;
         align-items:center;
     }
 
     .area1{
         grid-area:area1;
-        /*background-color:rgba(229,67,26,0.14);*/
+        background-color:rgba(229,67,26,0.14);
         display:flex;
         align-items:center;
-        justify-content:end;
     }
 
+    .area2{
+        grid-area:area2;
+        background-color:rgba(26,229,67,0.14);
+        display:flex;
+        align-items:center;
+    }
 
     .main{
         grid-area:main;
-        /*background-color:rgba(26,67,229,0.14);*/
+        background-color:rgba(26,67,229,0.14);
+        display:flex;
+        align-items:center;
     }
 `;

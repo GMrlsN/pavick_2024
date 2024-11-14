@@ -97,10 +97,10 @@ export const DataModulosConfiguracion = [
 
   },
   {
-    title: "Marca de productos",
-    subtitle: "gestiona tus marcas",
+    title: "Paquetes",
+    subtitle: "Genera paquetes de productos",
     icono: "https://i.ibb.co/1qsbCRb/piensa-fuera-de-la-caja.png",
-    link: "/configurar/marca",
+    link: "/configurar/paquetes",
 
   },
 
