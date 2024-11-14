@@ -10,7 +10,7 @@ export const useAuthStore = create((set, get) => ({
         if (error) {
             return null;
         }
-        
+        return data.user;
     },
 
     signOut: async () => {
