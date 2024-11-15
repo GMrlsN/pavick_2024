@@ -14,17 +14,17 @@ import { Configuracion } from "../pages/Configuracion";
 
 export function MyRoutes(){
     const {user} = UserAuth();
-    const {MostrarUsuarios} = useUsuariosStore();
+    const {mostrarUsuarios} = useUsuariosStore();
     const { data, isLoading, error } = useQuery({
         queryKey: ["mostrar usuario"], 
-        queryFn: MostrarUsuarios,
+        queryFn: mostrarUsuarios,
     });
     if (isLoading){
         return <SpinnerLoader/>
     }
     if (error){
-        //return <ErrorMolecula mensaje={error.message}/>
-        <span>Error</span>
+        return <ErrorMolecula mensaje={error.message}/>
+        //<span>Error</span>
     }
     return (
         <Routes>

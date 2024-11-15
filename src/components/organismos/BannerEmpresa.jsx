@@ -1,6 +1,8 @@
 import styled from "styled-components";
-import { v } from "../../styles/variables.jsx";
-import { CardDatosEmpresa } from "../moleculas/CardDatosEmpresa.";
+import { 
+  v,
+  CardDatosEmpresa
+} from "../../index";
 
 export function BannerEmpresa() {
     return (<Container>
@@ -13,9 +15,7 @@ export function BannerEmpresa() {
         RAMP Te ayuda a administrar tu empresa de manera sencilla y eficiente
       </div>
       <ContentCards>
-          <CardDatosEmpresa titulo="TITULO1" valor="1" />
-          
-          <CardDatosEmpresa titulo="TITULO2" valor="Holi" />
+          <CardDatosEmpresa titulo="Info_usuario" valor="#####" />
           
         </ContentCards>
       </div>
@@ -29,7 +29,7 @@ export function BannerEmpresa() {
           <g filter="url(#filter0_f_934_1718)">
             <path
               d="M436.631 215.884C513.562 314.19 490.786 459.853 385.76 541.232C280.733 622.611 133.227 608.889 56.2961 510.583C-20.6352 412.277 2.14047 266.613 107.167 185.234C212.193 103.855 359.699 117.578 436.631 215.884Z"
-              fill="#C300E2"
+              fill="#039422"
             ></path>
             <path
               d="M436.631 285.2C513.562 383.506 490.786 529.169 385.76 610.548C280.733 691.927 133.227 678.205 56.2961 579.899C-20.6352 481.593 2.14047 335.93 107.167 254.551C212.193 173.172 359.699 186.894 436.631 285.2Z"

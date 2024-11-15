@@ -1,5 +1,12 @@
 import styled from "styled-components";
-import {  BtnCircular, UserAuth, v, ListaMenuDesplegable, DesplegableUser, useAuthStore} from "../../../index";
+import {  
+  BtnCircular, 
+  UserAuth, 
+  v, 
+  ListaMenuDesplegable, 
+  DesplegableUser, 
+  useAuthStore} 
+  from "../../../index";
 export function Header({ stateConfig }) {
   const {signOut} = useAuthStore();
   const { user } = UserAuth();

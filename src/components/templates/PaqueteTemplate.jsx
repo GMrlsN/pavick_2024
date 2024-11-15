@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Header } from "../../index";
 import { useState } from "react";
 
-export function PaqueteTemplate() {
+export function PaqueteTemplate({data}) {
     const [state, setState] = useState(false);
     return (
       <Containeir>
@@ -13,7 +13,9 @@ export function PaqueteTemplate() {
         </header>
         <section className="area1"></section>
         <section className="area2"></section>
-        <section className="main"></section>
+        <section className="main">
+            
+        </section>
       </Containeir>
     );
 }
