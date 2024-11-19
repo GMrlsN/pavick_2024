@@ -20,8 +20,21 @@ export const useUsuariosStore = create((set, get) => ({
     idusuario: 0,
     mostrarUsuarios: async () => {
         const response = await MostrarUsuarios();
-        set({ idusuario: response.id });
-        return response;
-
+        if (response) {
+            set({ idusuario: response.id });
+            return response;
+        } else {
+            console.warn("No se encontró ningún usuario");
+            return null;
+        }
     },
+
+    mostrarUsuarios2: async () => {
+        const response = await MostrarUsuarios();
+        if (response) {
+            set({ usuario: response }); // Guarda el usuario completo
+        }
+        return response;
+    },
+    usuario: null, // Estado inicial para el usuario
 }));
