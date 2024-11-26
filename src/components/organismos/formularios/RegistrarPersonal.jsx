@@ -3,16 +3,13 @@ import styled from "styled-components";
 import { v } from "../../../styles/variables";
 import { InputText, Btnsave, ConvertirCapitalize, usePersonalStore } from "../../../index";
 import { useForm } from "react-hook-form";
-
 export function RegistrarPersonal({ onClose, dataSelect, accion }) {
   const { insertarPersonal, editarPersonal } = usePersonalStore();
-
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
-
   // Función para manejar el envío del formulario
   async function insertar(data) {
     if (accion === "Editar") {
@@ -48,14 +45,12 @@ export function RegistrarPersonal({ onClose, dataSelect, accion }) {
       onClose();
     }
   }
-
   // Si la acción es "Editar", cargamos los datos existentes en los campos del formulario
   useEffect(() => {
     if (accion === "Editar" && dataSelect) {
       // Prellenar los campos si estamos editando
     }
   }, [accion, dataSelect]);
-
   return (
     <Container>
       <div className="sub-contenedor">
@@ -67,7 +62,6 @@ export function RegistrarPersonal({ onClose, dataSelect, accion }) {
             <span onClick={onClose}>x</span>
           </section>
         </div>
-
         <form className="formulario" onSubmit={handleSubmit(insertar)}>
           <section>
             {/* Campo de nombre */}
@@ -86,7 +80,6 @@ export function RegistrarPersonal({ onClose, dataSelect, accion }) {
                 {errors.nombres?.type === "required" && <p>Campo requerido</p>}
               </InputText>
             </article>
-
             {/* Campo de teléfono */}
             <article>
               <InputText icono={<v.iconomarca />}>
@@ -103,7 +96,6 @@ export function RegistrarPersonal({ onClose, dataSelect, accion }) {
                 {errors.telefono?.type === "required" && <p>Campo requerido</p>}
               </InputText>
             </article>
-
             {/* Campo de correo */}
             <article>
               <InputText icono={<v.iconomarca />}>
@@ -120,7 +112,6 @@ export function RegistrarPersonal({ onClose, dataSelect, accion }) {
                 {errors.correo?.type === "required" && <p>Campo requerido</p>}
               </InputText>
             </article>
-
             {/* Campo de tipo de usuario */}
             <article>
               <InputText icono={<v.iconomarca />}>
@@ -137,7 +128,6 @@ export function RegistrarPersonal({ onClose, dataSelect, accion }) {
                 {errors.tipouser?.type === "required" && <p>Campo requerido</p>}
               </InputText>
             </article>
-
             <div className="btnguardarContent">
               <Btnsave
                 icono={<v.iconoguardar />}
@@ -151,7 +141,6 @@ export function RegistrarPersonal({ onClose, dataSelect, accion }) {
     </Container>
   );
 }
-
 const Container = styled.div`
   transition: 0.5s;
   top: 0;
@@ -164,7 +153,6 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1000;
-
   .sub-contenedor {
     width: 500px;
     max-width: 85%;
@@ -173,24 +161,20 @@ const Container = styled.div`
     box-shadow: -10px 15px 30px rgba(10, 9, 9, 0.4);
     padding: 13px 36px 20px 36px;
     z-index: 100;
-
     .headers {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
-
       h1 {
         font-size: 20px;
         font-weight: 500;
       }
-
       span {
         font-size: 20px;
         cursor: pointer;
       }
     }
-
     .formulario {
       section {
         gap: 20px;
@@ -206,4 +190,3 @@ const Container = styled.div`
     }
   }
 `;
-

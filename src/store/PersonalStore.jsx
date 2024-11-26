@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { MostrarPersonal, InsertarPesonal, EliminarPersonal, EditarPersonal, BuscarPersonal } from "../index";
-
 export const usePersonalStore = create((set, get) => ({
   buscador: "", // Para buscar personal
   setBuscador: (p) => {
@@ -9,7 +8,6 @@ export const usePersonalStore = create((set, get) => ({
   datapersona: [], // Almacena los datos del personal
   personalItemSelect: [], // Almacena el personal seleccionado
   parametro: {}, // Parámetros para la consulta
-
   // Función para mostrar el personal
   mostrarPersonal: async (p) => {
     try {
@@ -27,12 +25,10 @@ export const usePersonalStore = create((set, get) => ({
         set({ datapersona: [] });
     }
 },
-
   // Función para seleccionar un ítem de personal
   selectPersonal: (p) => {
     set({ personalItemSelect: p });
   },
-
   // Función para insertar un nuevo personal
   insertarPersonal: async (p) => {
     await InsertarPesonal(p);
@@ -40,7 +36,6 @@ export const usePersonalStore = create((set, get) => ({
     const { parametro } = get();
     set(mostrarPersonal(parametro)); // Actualiza la lista después de insertar
   },
-
   // Función para eliminar un personal
   eliminarPersonal: async (p) => {
     await EliminarPersonal(p); // Asegúrate de que se pase el parámetro correcto
@@ -48,7 +43,6 @@ export const usePersonalStore = create((set, get) => ({
     const { parametro } = get();
     set(mostrarPersonal(parametro)); // Actualiza la lista después de eliminar
   },
-
   // Función para editar el personal
   editarPersonal: async (p) => {
     await EditarPersonal(p); // Asegúrate de pasar el parámetro correcto para editar
@@ -56,7 +50,6 @@ export const usePersonalStore = create((set, get) => ({
     const { parametro } = get();
     set(mostrarPersonal(parametro)); // Actualiza la lista después de editar
   },
-
   // Función para buscar personal
   buscarPersonal: async (p) => {
     const response = await BuscarPersonal(p);

@@ -24,7 +24,7 @@ export function PaqueteTemplate({data}) {
                 stateConfig={{ state: state, setState: () => setState(!state) }}
             />
         </header>
-        <section className="area1"></section>
+        <section className="area1">
         <ContentFiltro> 
                 <Title>
                     Paquetes 
@@ -33,9 +33,9 @@ export function PaqueteTemplate({data}) {
                 textcolor="#353535"
                 icono={<v.agregar/>}/>
             </ContentFiltro>
-        <section className="area2">
             <Buscador setBuscador={setBuscador}/>
         </section>
+    
         <section className="main">
             <TablaPaquete data={data} setOpenRegistraPaquete={setOpenRegistraPaquete}
             setdataSelect ={setdataSelect} setAccion={setAccion}/>
@@ -54,7 +54,6 @@ const Containeir = styled.div`
     grid-template: 
     "header" 100px
     "area1" 100px
-    "area2" 100px
     "main" auto;
 
     .header{
@@ -71,13 +70,6 @@ const Containeir = styled.div`
         align-items:center;
     }
 
-    .area2{
-        grid-area:area2;
-        /*background-color:rgba(26,229,67,0.14);*/
-        display:flex;
-        align-items:center;
-        justify-content:end;
-    }
 
     .main{
         grid-area:main;

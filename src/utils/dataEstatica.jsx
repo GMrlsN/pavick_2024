@@ -32,23 +32,14 @@ export const LinksArray = [
     to: "/",
   },
   {
-    label: "Inventario",
-    icon: <v.iconocategorias />,
-    to: "/inventario",
-  },
-  {
-    label: "Reportes",
-    icon: <v.iconoreportes />,
-    to: "/reportes",
-  },
-
-];
-export const SecondarylinksArray = [
-  {
     label: "Modulos",
     icon: <AiOutlineSetting />,
     to: "/configurar",
   },
+
+
+];
+export const SecondarylinksArray = [
 
 ];
 //temas
@@ -75,15 +66,6 @@ export const DataModulosConfiguracion = [
     link: "/configurar/usuarios",
 
   },
-
-  {
-    title: "Clientes",
-    subtitle: "ten el control de los clientes",
-    icono: "https://i.ibb.co/5vgZ0fX/hombre.png",
-    link: "/configurar/clientes",
-
-  },
-
   {
     title: "Ordenes",
     subtitle: "registra tus ordenes",
@@ -91,6 +73,15 @@ export const DataModulosConfiguracion = [
     link: "/configurar/empresa",
 
   },
+
+  //{
+    //title: "Clientes",
+    //subtitle: "ten el control de los clientes",
+    //icono: "https://i.ibb.co/5vgZ0fX/hombre.png",
+    //link: "/configurar/clientes",
+  //},
+
+
   {
     title: "Categoria de productos",
     subtitle: "Categorias a tus productos",

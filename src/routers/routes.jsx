@@ -1,11 +1,12 @@
 import { Routes,Route } from "react-router-dom";
 import {
+    Categoria,
     ErrorMolecula,
     Home, 
     Login, 
-    Paquetes, 
+    Paquetes,
     Productos,
-    Personal,
+    Personal, 
     ProtectedRoute,
     SpinnerLoader,
     UserAuth, 
@@ -35,6 +36,7 @@ export function MyRoutes(){
                 <Route path="/" element={<Home />}/>
                 <Route path="/configurar" element={<Configuracion />} />
                 <Route path="/configurar/paquetes" element={<Paquetes />} />
+                <Route path="/configurar/categorias" element={<Categoria />} />
                 <Route path="/configurar/productos" element={<Productos />} />
                 <Route path="/configurar/usuarios" element={<Personal />} />
             </Route>

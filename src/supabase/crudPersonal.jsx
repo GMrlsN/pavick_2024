@@ -11,21 +11,16 @@ export async function InsertarPesonal(p) {
         });
     }
 }
-
-
 export async function MostrarPersonal(p) {
     const { data, error } = await supabase
         .from("usuarios")
         .select()  // No se aplica ningún filtro
         .order("id", { ascending: true });  // Ordena los resultados por id en orden ascendente
-
     if (error) {
         console.log(error.message);
     }
     return data;
 }
-
-
 export async function EliminarPersonal(p) {
     const {error} = await supabase
         .from("usuarios")
@@ -35,8 +30,6 @@ export async function EliminarPersonal(p) {
         alert("Error al eliminar usuario: " + error.message);
     }
 }
-
-
 export async function EditarPersonal(p) {
     const {error} = await supabase
         .from("usuarios")
@@ -46,8 +39,6 @@ export async function EditarPersonal(p) {
         alert("Error al editar usuario: " + error.message);
     }
 }
-
-
 export async function BuscarPersonal(p) {
     const {data, error} = await supabase
         .from("usuarios")

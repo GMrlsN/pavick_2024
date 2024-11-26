@@ -60,11 +60,50 @@ export function RegistratPaquetes({ onClose,dataSelect,accion}) {
                       defaultValue={dataSelect.descripcion}
                       type="text"
                       placeholder=""
-                      {...register("nombre", {
+                      {...register("paquetes.nombre", {
                         required: true,
                       })}
                     />
-                    <label className="form__label">paquete</label>
+                    <label className="form__label">Nombre del paquete</label>
+                    {errors.nombre?.type === "required" && <p>Campo requerido</p>}
+                  </InputText>
+                  <InputText icono={<v.iconomarca />}>
+                    <input
+                      className="form__field"
+                      defaultValue={dataSelect.descripcion}
+                      type="text"
+                      placeholder=""
+                      {...register("paquetes.precio", {
+                        required: true,
+                      })}
+                    />
+                    <label className="form__label">Precio del Paquete</label>
+                    {errors.nombre?.type === "required" && <p>Campo requerido</p>}
+                  </InputText>
+                  <InputText icono={<v.iconomarca />}>
+                    <input
+                      className="form__field"
+                      defaultValue={dataSelect.descripcion}
+                      type="text"
+                      placeholder=""
+                      {...register("products.name", {
+                        required: true,
+                      })}
+                    />
+                    <label className="form__label">Nombre del producto</label>
+                    {errors.nombre?.type === "required" && <p>Campo requerido</p>}
+                  </InputText>
+                  <InputText icono={<v.iconomarca />}>
+                    <input
+                      className="form__field"
+                      defaultValue={dataSelect.descripcion}
+                      type="text"
+                      placeholder=""
+                      {...register("cantidad", {
+                        required: true,
+                      })}
+                    />
+                    <label className="form__label">Cantidad</label>
                     {errors.nombre?.type === "required" && <p>Campo requerido</p>}
                   </InputText>
                 </article>
