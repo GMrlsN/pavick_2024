@@ -15,9 +15,9 @@ export const usePaqueteStore = create((set, get) => ({
     setBuscador: (p) => set({ buscador: p }),
 
     mostrarPaquete: async (p) => {
-        console.log("Ejecutando mostrar Paquete con", p);
+        console.log("Ejecutando mostrarPaquete con", p);
         if (!p || !p.id_paquete) {
-            console.error("Parámetro inválido para mostrar Paquete");
+            console.error("Parámetro inválido para mostrarPaquete");
             return;
         }
         try {

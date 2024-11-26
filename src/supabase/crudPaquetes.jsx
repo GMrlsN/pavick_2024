@@ -59,7 +59,7 @@ export async function MostrarPaquete(p) {
     // { id_paquete: 1 }
     console.log("Ejecutando MostrarPaquete con", p);
     const { data, error } = await supabase
-        .from("paquete_producto ")
+        .from("paquete_producto")
         .select(`
             cantidad,
             paquetes (id_paquete, nombre, precio),
@@ -80,11 +80,11 @@ export async function MostrarPaquete(p) {
 export async function EliminarPaquete(p) {
     // `p` es un objeto que contiene el identificador del paquete a eliminar. Ejemplo:
     // { id_paquete: 1 }
-    console.log("Ejecutando EliminarPaquete con", p);
+
     const { error: errorRelacionados } = await supabase
         .from("paquete_producto")
         .delete()
-        .eq("id_paquete", p.id_paquete);
+        .eq("paquete_id", p.id_paquete);
 
     if (errorRelacionados) {
         console.error("Error al eliminar los registros relacionados:", errorRelacionados.message);

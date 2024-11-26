@@ -1,12 +1,14 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
+
 export function RegistrarProductos({ onSubmit }) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
   const handleRegister = (data) => {
     const newProduct = {
       _name: data._name,
@@ -18,8 +20,10 @@ export function RegistrarProductos({ onSubmit }) {
       _created_at: new Date().toISOString(),
       _updated_at: new Date().toISOString(),
     };
+
     if (onSubmit) onSubmit(newProduct);
   };
+
   return (
     <Container>
       <h1>Registrar Producto</h1>
@@ -33,6 +37,7 @@ export function RegistrarProductos({ onSubmit }) {
           />
           {errors._name && <ErrorMessage>{errors._name.message}</ErrorMessage>}
         </InputContainer>
+
         {/* Descripción */}
         <InputContainer>
           <label>Descripción:</label>
@@ -45,6 +50,7 @@ export function RegistrarProductos({ onSubmit }) {
             <ErrorMessage>{errors._description.message}</ErrorMessage>
           )}
         </InputContainer>
+
         {/* Precio */}
         <InputContainer>
           <label>Precio:</label>
@@ -58,6 +64,7 @@ export function RegistrarProductos({ onSubmit }) {
           />
           {errors._price && <ErrorMessage>{errors._price.message}</ErrorMessage>}
         </InputContainer>
+
         {/* Cantidad en stock */}
         <InputContainer>
           <label>Cantidad en stock:</label>
@@ -72,6 +79,7 @@ export function RegistrarProductos({ onSubmit }) {
             <ErrorMessage>{errors._stock_quantity.message}</ErrorMessage>
           )}
         </InputContainer>
+
         {/* ID de la categoría */}
         <InputContainer>
           <label>ID de Categoría:</label>
@@ -86,6 +94,7 @@ export function RegistrarProductos({ onSubmit }) {
             <ErrorMessage>{errors._category_id.message}</ErrorMessage>
           )}
         </InputContainer>
+
         {/* Estado Activo/Inactivo */}
         <InputContainer>
           <label>¿Está activo?</label>
@@ -99,12 +108,14 @@ export function RegistrarProductos({ onSubmit }) {
             <ErrorMessage>{errors._is_active.message}</ErrorMessage>
           )}
         </InputContainer>
+
         {/* Botón de Guardar */}
         <Button type="submit">Guardar Producto</Button>
       </form>
     </Container>
   );
 }
+
 const Container = styled.div`
   max-width: 500px;
   margin: 20px auto;
@@ -113,14 +124,17 @@ const Container = styled.div`
   border-radius: 8px;
   background-color: #f9f9f9;
 `;
+
 const InputContainer = styled.div`
   margin-bottom: 15px;
   display: flex;
   flex-direction: column;
+
   label {
     font-weight: bold;
     margin-bottom: 5px;
   }
+
   input,
   textarea,
   select {
@@ -130,10 +144,12 @@ const InputContainer = styled.div`
     border-radius: 4px;
   }
 `;
+
 const ErrorMessage = styled.span`
   color: red;
   font-size: 12px;
 `;
+
 const Button = styled.button`
   background-color: #4caf50;
   color: white;
@@ -142,6 +158,7 @@ const Button = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
+
   &:hover {
     background-color: #45a049;
   }

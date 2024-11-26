@@ -11,15 +11,15 @@ export function Buscador({setBuscador}) {
             <article className="content">
                 <FaSearch className="icono"/>
                 <input onChange={buscar}
-                placeholder="buscar..."></input>
+                placeholder="...buscar"></input>
             </article>
         </Container>
     );
 }
 const Container = styled.div`
     background-color: ${({theme}) => theme.bg};
-    border-radius: 20px;
-    height: 50px;
+    border-radius: 10px;
+    height: 60px;
     align-items: center;
     display: flex;
     color: ${({ theme}) => theme.text};
@@ -40,7 +40,6 @@ const Container = styled.div`
             outline: none;
             background-color: none;
             border: 0;
-            
             color: ${({theme}) => theme.text};
         }
         }    
