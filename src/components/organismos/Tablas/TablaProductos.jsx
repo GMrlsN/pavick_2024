@@ -18,7 +18,6 @@ import {
 } from "../../../index";
 import Swal from "sweetalert2";
 import { FaArrowsAltV } from "react-icons/fa";
-
 export function TablaProductos({
   data,
   SetopenRegistro,
@@ -27,7 +26,6 @@ export function TablaProductos({
 }) {
   const [pagina, setPagina] = useState(1);
   const { eliminarproductos } = useProductosStore();
-
   const editar = (producto) => {
     if (producto.name === "Genérico") {
       Swal.fire({
@@ -41,7 +39,6 @@ export function TablaProductos({
     setdataSelect(producto);
     setAccion("Editar");
   };
-
   const eliminar = (producto) => {
     if (producto.name === "Genérico") {
       Swal.fire({
@@ -65,7 +62,6 @@ export function TablaProductos({
       }
     });
   };
-
   const columns = [
     {
       accessorKey: "name",
@@ -126,7 +122,6 @@ export function TablaProductos({
       ),
     },
   ];
-
   const table = useReactTable({
     data,
     columns,
@@ -135,7 +130,6 @@ export function TablaProductos({
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
-
   return (
     <Container>
       <table className="responsive-table">
@@ -186,7 +180,6 @@ export function TablaProductos({
     </Container>
   );
 }
-
 const Container = styled.div`
   position: relative;
   margin: 5% 3%;
@@ -196,19 +189,16 @@ const Container = styled.div`
   @media (min-width: ${v.bphomer}) {
     margin: 2em auto;
   }
-
   .responsive-table {
     width: 100%;
     margin-bottom: 1.5em;
     border-spacing: 0;
-
     @media (min-width: ${v.bpbart}) {
       font-size: 0.9em;
     }
     @media (min-width: ${v.bpmarge}) {
       font-size: 1em;
     }
-
     thead {
       position: absolute;
       padding: 0;
@@ -216,14 +206,12 @@ const Container = styled.div`
       height: 1px;
       width: 1px;
       overflow: hidden;
-
       @media (min-width: ${v.bpbart}) {
         position: relative;
         height: auto;
         width: auto;
         overflow: auto;
       }
-
       th {
         border-bottom: 2px solid rgba(115, 115, 115, 0.32);
         font-weight: normal;
@@ -234,7 +222,6 @@ const Container = styled.div`
         }
       }
     }
-
     tbody,
     tr,
     th,
@@ -244,18 +231,15 @@ const Container = styled.div`
       text-align: left;
       white-space: normal;
     }
-
     tr {
       @media (min-width: ${v.bpbart}) {
         display: table-row;
       }
     }
-
     th,
     td {
       padding: 0.5em;
       vertical-align: middle;
-
       @media (min-width: ${v.bplisa}) {
         padding: 0.75em 0.5em;
       }
@@ -263,21 +247,17 @@ const Container = styled.div`
         display: table-cell;
         padding: 0.5em;
       }
-
       @media (min-width: ${v.bpmarge}) {
         padding: 0.75em 0.5em;
       }
-
       @media (min-width: ${v.bphomer}) {
         padding: 0.75em;
       }
     }
-
     tbody {
       @media (min-width: ${v.bpbart}) {
         display: table-row-group;
       }
-
       tr {
         margin-bottom: 1em;
         @media (min-width: ${v.bpbart}) {
@@ -293,19 +273,16 @@ const Container = styled.div`
           }
         }
       }
-
       th[scope="row"] {
         @media (min-width: ${v.bplisa}) {
           border-bottom: 1px solid rgba(161, 161, 161, 0.32);
         }
-
         @media (min-width: ${v.bpbart}) {
           background-color: transparent;
           text-align: center;
           color: ${({ theme }) => theme.text};
         }
       }
-
       .ContentCell {
         text-align: right;
         display: flex;
@@ -313,13 +290,11 @@ const Container = styled.div`
         align-items: center;
         height: 50px;
         border-bottom: 1px solid rgba(161, 161, 161, 0.32);
-
         @media (min-width: ${v.bpbart}) {
           justify-content: center;
           border-bottom: none;
         }
       }
-
       td {
         text-align: right;
         @media (min-width: ${v.bpbart}) {

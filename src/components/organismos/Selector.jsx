@@ -36,5 +36,4 @@ const Container = styled.div`
     background-color: ${(props) => props.$color};
     color: #000;
   }
-
 `;
