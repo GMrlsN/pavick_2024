@@ -1,43 +1,116 @@
 import { create } from "zustand";
-import { BuscarProductos, EditarProductos, EliminarProductos, InsertarProductos, MostrarProductos } from "../index";
+import {
+  MostrarProductos,
+  InsertarProductos,
+  EditarProductos,
+  EliminarProductos,
+  BuscarProductos,
+} from "../index";
+
 export const useProductosStore = create((set, get) => ({
+  // Estado inicial
   buscador: "",
+  dataproductos: [],
+  productosItemSelect: null, // Mejor opción para manejar un solo producto seleccionado
+  parametros: {},
+
+  // Actualizar el buscador
   setBuscador: (p) => {
     set({ buscador: p });
   },
-  dataproductos: [],
-  productosItemSelect: [],
-  parametros: {},
-  mostrarproductos: async (p) => {
-    const response = await MostrarProductos(p);
-    set({ parametros: p });
-    set({ dataproductos: response });
-    set({ productosItemSelect: response[0] });
-    return response;
+
+  // Mostrar productos
+  mostrarproductos: async () => {
+    try {
+      console.log("Mostrando productos...");
+      const response = await MostrarProductos();
+
+      set({
+        dataproductos: response, // Actualizar la lista de productos
+        productosItemSelect: response.length > 0 ? response[0] : null, // Seleccionar el primer producto si hay resultados
+      });
+
+      console.log("Productos obtenidos:", response);
+      return response;
+    } catch (error) {
+      console.error("Error al mostrar productos:", error);
+      throw new Error("No se pudieron obtener los productos.");
+    }
   },
-  selectproductos: (p) => {
-    set({ productosItemSelect: p });
+
+  // Insertar un nuevo producto
+  insertarproductos: async (id,name,description,price,stock_quantity,category_id,is_active) => {
+    try {
+      const result = await InsertarProductos(id,name,description,price,stock_quantity,category_id,is_active);
+
+      if (result.success) {
+        window.location.reload();
+        console.log("Producto añadida exitosamente:", result.data);
+        return result.data; // Return the added producto
+      } else {
+        console.error("Error al agregar producto:", result.message);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error al agregar producto:", error);
+      throw new Error("No se pudo agregar la producto.");
+    }
   },
-  insertarproductos: async (p) => {
-    await InsertarProductos(p);
-    const { mostrarproductos } = get();
-    const { parametros } = get();
-    set(mostrarproductos(parametros));
+
+  // Eliminar un producto
+  eliminarproductos: async (data) => {
+    console.log("Eliminar un producto: ", data.id);
+    try {
+      const result = await EliminarProductos(data.id);
+
+      if (result.success) {
+        window.location.reload();
+        console.log("Producto eliminado exitosamente:", result.data);
+        return result.data; // Return the deleted category
+      } else {
+        console.error("Error al eliminar producto:", result.message);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error al eliminar producto:", error);
+      throw new Error("No se pudo eliminar la producto.");
+    }
   },
-  eliminarproductos: async (p) => {
-    await EliminarProductos(p);
-    const { mostrarproductos } = get();
-    const { parametros } = get();
-    set(mostrarproductos(parametros));
+
+  // Editar un producto existente
+  editarproductos: async (id,name,description,price,stock_quantity,category_id,is_active) => {
+    try {
+      const result = await EditarProductos(id,name,description,price,stock_quantity,category_id,is_active);
+
+      if (result.success) {
+        window.location.reload();
+        console.log("Producto editada exitosamente:", result.data);
+        return result.data; // Return the updated category
+      } else {
+        console.error("Error al editar producto:", result.message);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error al editar producto:", error);
+      throw new Error("No se pudo editar la producto.");
+    }
   },
-  editarproductos: async (p) => {
-    await EditarProductos(p);
-    const { mostrarproductos } = get();
-    const { parametros } = get();
-    set(mostrarproductos(parametros));
-  },
-  buscarproductos: async (p) => {
-    const response = await BuscarProductos(p);
-    set({ dataproductos: response });
+
+  // Buscar productos específicos
+  buscarproductos: async (filtros) => {
+    try {
+      console.log("Buscando productos con filtros:", filtros);
+      const response = await BuscarProductos(filtros);
+
+      set({
+        dataproductos: response,
+      });
+
+      console.log("Productos encontrados:", response);
+      return response;
+    } catch (error) {
+      console.error("Error al buscar productos:", error);
+      throw new Error("No se pudieron buscar los productos.");
+    }
   },
 }));

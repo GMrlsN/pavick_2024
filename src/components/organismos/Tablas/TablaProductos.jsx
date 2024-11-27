@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -9,15 +9,15 @@ import {
 } from "@tanstack/react-table";
 import styled from "styled-components";
 import {
-  Colorcontent,
-  ColorcontentTable,
   ContentAccionesTabla,
   Paginacion,
   useProductosStore,
+  Colorcontent,
   v,
 } from "../../../index";
 import Swal from "sweetalert2";
 import { FaArrowsAltV } from "react-icons/fa";
+
 export function TablaProductos({
   data,
   SetopenRegistro,
@@ -26,21 +26,25 @@ export function TablaProductos({
 }) {
   const [pagina, setPagina] = useState(1);
   const { eliminarproductos } = useProductosStore();
-  const editar = (producto) => {
-    if (producto.name === "Genérico") {
+
+  const [updateFlag, setUpdateFlag] = useState(false);
+
+  const editar = (data) => {
+    if (data.descripcion === "General") {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Este registro no se puede modificar ya que es un valor por defecto.",
+        text: "Este registro no se permite modificar ya que es valor por defecto.",
       });
       return;
     }
     SetopenRegistro(true);
-    setdataSelect(producto);
+    setdataSelect(data);
     setAccion("Editar");
   };
-  const eliminar = (producto) => {
-    if (producto.name === "Genérico") {
+
+  const eliminar = (p) => {
+    if (p.descripcion === "Genérico") {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -58,11 +62,17 @@ export function TablaProductos({
       confirmButtonText: "Sí, eliminar",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await eliminarproductos({ id: producto.product_id });
+        await eliminarproductos({ id: p.product_id });
       }
     });
   };
-  const columns = [
+
+  const handleEditar = (row) => {
+    editar(row); // Call the original editar function
+    setUpdateFlag((prev) => !prev); // Trigger re-evaluation of useMemo
+  };
+
+  const columns = useMemo(() => [
     {
       accessorKey: "name",
       header: "Nombre",
@@ -100,6 +110,15 @@ export function TablaProductos({
       ),
     },
     {
+      accessorKey: "category_id",
+      header: "Categoria",
+      cell: (info) => (
+        <td data-title="Categoria" className="ContentCell">
+          <span>{info.getValue()}</span>
+        </td>
+      ),
+    },
+    {
       accessorKey: "is_active",
       header: "Activo",
       cell: (info) => (
@@ -110,7 +129,7 @@ export function TablaProductos({
     },
     {
       accessorKey: "acciones",
-      header: "Acciones",
+      header: "",
       enableSorting: false,
       cell: (info) => (
         <td className="ContentCell">
@@ -121,7 +140,8 @@ export function TablaProductos({
         </td>
       ),
     },
-  ];
+  ], [updateFlag]);
+
   const table = useReactTable({
     data,
     columns,
@@ -130,6 +150,7 @@ export function TablaProductos({
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
+
   return (
     <Container>
       <table className="responsive-table">
@@ -147,12 +168,10 @@ export function TablaProductos({
                       <FaArrowsAltV />
                     </span>
                   )}
-                  {
-                    {
-                      asc: " 🔼",
-                      desc: " 🔽",
-                    }[header.column.getIsSorted()]
-                  }
+                  {{
+                    asc: " 🔼",
+                    desc: " 🔽",
+                  }[header.column.getIsSorted()]}
                 </th>
               ))}
             </tr>
@@ -180,43 +199,37 @@ export function TablaProductos({
     </Container>
   );
 }
+
 const Container = styled.div`
-width: 100%; /* Ocupa todo el ancho del contenedor principal */
-padding: 20px;
-border-radius: 8px;
-box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-overflow-x: auto; /* Permite desplazamiento horizontal en caso de tablas grandes */
+  width: 100%;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
 
-table {
-  width: 100%; /* La tabla ocupa todo el ancho disponible */
-  border-collapse: collapse;
-  font-family: Arial, sans-serif;
+  table {
+    width: 100%;
+    border-collapse: collapse;
 
-  th, td {
-    padding: 10px;
-    text-align: center;
- 
-  }
-
-  th {
-    background-color: ; /* Color del encabezado */
-    color: #050505;
-    font-weight: bold;
-    border-bottom: 1px solid #050505 ;
-    
-  }
-
-  tr:hover {
-    background-color: #c3e0ca; /* Color al pasar el mouse */
-  }
-
-  td {
-    color: #333;
-    font-size: 14px;
-
-    &.ContenCell {
+    th, td {
+      padding: 10px;
       text-align: center;
     }
+
+    th {
+      background-color: #f2f2f2;
+      color: #333;
+      font-weight: bold;
+      border-bottom: 1px solid #ccc;
+    }
+
+    tr:hover {
+      background-color: #c3e0ca;
+    }
+
+    td {
+      color: #333;
+      font-size: 14px;
+    }
   }
-}
 `;

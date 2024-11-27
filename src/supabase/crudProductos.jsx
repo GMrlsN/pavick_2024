@@ -1,42 +1,73 @@
-import {supabase} from "../index"
-import Swal from "sweetalert2"
-export async function InsertarProductos(p) {
-    const {error} = await supabase.rpc("insertarproductos",p)
-    if(error) {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: error.message,
-            footer: '<a href="">Agregue una nueva descripcion</a>',
-          });
-    }
+import { supabase } from "../index";
+import Swal from "sweetalert2";
+
+// Insertar un producto
+export async function InsertarProductos(id,name,description,price,stock_quantity,category_id,is_active) {
+  const { data, error } = await supabase
+   .from("products")
+   .insert ([{name,description,price,stock_quantity,category_id,is_active}])
+   .eq("product_id", id);
+   
+   if (error) {
+    console.error("Error adding products:", error);
+    return { success: false, message: "Failed to add products" };
+  }
+
+  return { success: true, data }; // Return the inserted data if successful
 }
-export async function MostrarProductos(p) {
- 
-    const { data } = await supabase.rpc("mostrarproductos",p)
-    return data;
-  
+
+// Mostrar productos
+export async function MostrarProductos() {
+  const { data, error } = await supabase
+   .from("products")
+   .select("*");
+
+   if (error) {
+    console.error("Error fetching productos:", error);
+    return [];
+  }
+
+  return data;
 }
+
+// Eliminar un producto
 export async function EliminarProductos(id) {
- 
-    const { error } = await supabase
-      .from("products")
-      .delete()
-      .eq("product_id", id);
+  const { data, error } = await supabase
+    .from("products")
+    .delete()
+    .eq("product_id", id);
+
     if (error) {
-      alert("Error al eliminar", error.message);
+      console.error("Error deleting products:", error);
+      return { success: false, message: "Failed to delete products" };
     }
-}
-export async function EditarProductos(p) {
-    const { error } = await supabase
-      .from("products")
-      .update(p)
-      .eq("product_id", p.product_id);
+  
+    return { success: true, data }; // Return the inserted data if successful
+  }
+
+// Editar un producto
+export async function EditarProductos(id,name,description,price,stock_quantity,category_id,is_active) {
+  const { data, error } = await supabase
+    .from("products")
+    .update({name,description,price,stock_quantity,category_id,is_active})
+    .eq("product_id", id);
+
     if (error) {
-      alert("Error al editar Productos", error.message);
+      console.error("Error updating products:", error);
+      return { success: false, message: "Failed to update products" };
     }
-}
+  
+    return { success: true, data }; // Return the inserted data if successful
+  }
+
+// Buscar productos
 export async function BuscarProductos(p) {
-    const { data} = await supabase.rpc("buscarproductos",p)
-    return data;
+  const { data, error } = await supabase.rpc("buscarproductos", p);
+
+  if (error) {
+    console.error("Error al buscar productos:", error);
+    return { success: false, message: "Error al buscar productos", data: [] };
+  }
+
+  return { success: true, data };
 }

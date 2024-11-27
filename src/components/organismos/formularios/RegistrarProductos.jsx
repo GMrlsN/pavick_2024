@@ -1,149 +1,202 @@
-import React, { useEffect } from "react";
+import {useEffect,useState, useMemo } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import { FaRegEdit, FaTags, FaRegMoneyBillAlt, FaWarehouse, FaCheckCircle } from "react-icons/fa";
+import {v} from "../../../styles/variables";
+import {
+  InputText,
+  Btnsave,
+  useProductosStore,
+} from "../../../index";
 
-export function RegistrarProductos({ accion, dataSelect, onSubmit, onClose }) {
+export function RegistrarProductos({ onClose, dataSelect, accion }) {
+  console.log(accion);
+  const { insertarproductos, editarproductos } = useProductosStore(); // Call both functions from the store
   const {
     register,
-    handleSubmit,
-    setValue,
     formState: { errors },
+    handleSubmit,
   } = useForm();
+  // Memorizar valores por defecto para evitar renders innecesarios
+  const memoizedData = useMemo(() => {
+    return {
+      name: dataSelect?.name || "",
+      description: dataSelect?.description || "",
+      price: dataSelect?.price || "",
+      stock_quantity: dataSelect?.stock_quantity || "",
+      category_id: dataSelect?.category_id || "",
+      is_active: dataSelect?.is_active?.toString() || "true",
+    };
+  }, [dataSelect]);
 
-  const handleRegister = (data) => {
-    const newProduct = {
-      _name: data._name,
-      _description: data._description,
-      _price: parseFloat(data._price),
-      _stock_quantity: parseInt(data._stock_quantity, 10),
-      _category_id: parseInt(data._category_id, 10),
-      _is_active: data._is_active === "true",
-      _created_at: new Date().toISOString(),
-      _updated_at: new Date().toISOString(),
+  // Function to insert or edit a category
+  async function insertar(data) {
+    console.log(data);
+    console.log(accion);
+    console.log("ID: " +dataSelect.product_id);
+    const payload = {
+      name: data.nombre, // category_name instead of descripcion
+      description: data.descripcion,
+      price: data.precio,
+      stock_quantity: data.stock_quantity,
+      category_id: data.category_id,
+      is_active: data.is_active === "true" ,
     };
 
-    if (onSubmit) onSubmit(newProduct);
-  };
-
-  useEffect(() => {
-    if (accion === "Editar" && dataSelect) {
-      setValue("_name", dataSelect._name);
-      setValue("_description", dataSelect._description);
-      setValue("_price", dataSelect._price);
-      setValue("_stock_quantity", dataSelect._stock_quantity);
-      setValue("_category_id", dataSelect._category_id);
-      setValue("_is_active", dataSelect._is_active !== undefined ? dataSelect._is_active.toString() : "true");
+    if (accion == "Nuevo") {
+      // If adding a new category
+       const newProducto = await insertarproductos(dataSelect.product_id,payload.name,payload.description,payload.price,payload.stock_quantity,payload.category_id,payload.is_active);
+      if (newProducto) {
+        console.log("Producto añadida:", newProducto);
+      } 
+    } else if (accion == "Editar") {
+      // If editing an existing category
+      const updatedProducto = await editarproductos(dataSelect.product_id,payload.name,payload.description,payload.price,payload.stock_quantity,payload.category_id,payload.is_active );
+      if (updatedProducto) {
+        console.log("Producto editado:", updatedProducto);
+      }
     }
-  }, [accion, dataSelect, setValue]);
+
+    onClose(); // Close the modal after the operation
+  }
 
   return (
     <Container>
       <div className="sub-contenedor">
         <div className="headers">
-          <h1>{accion === "Editar" ? "Editar Producto" : "Registrar Producto"}</h1>
-          <CloseButton onClick={onClose}>x</CloseButton>
+          <section>
+            <h1>
+              {accion === "Editar"? "Editar Producto" : "Registrar Producto"}
+            </h1>
+          </section>
+          <section>
+            <span onClick={onClose}>x</span>
+          </section>
         </div>
 
-        <form className="formulario" onSubmit={handleSubmit(handleRegister)}>
-          <Section>
-            <InputWrapper>
-              <Label>
-                <FaRegEdit /> Nombre
-              </Label>
-              <Input
-                type="text"
-                {...register("_name", { required: "Este campo es obligatorio" })}
-              />
-              {errors._name && <ErrorMessage>{errors._name.message}</ErrorMessage>}
-            </InputWrapper>
+        <form className="formulario" onSubmit={handleSubmit(insertar)}>
+        <section>
+  {/* Nombre */}
+  <article>
+    <InputText icono={<v.iconomarca />}>
+      <input
+        className="form__field"
+        defaultValue={memoizedData.name} // Valor por defecto para "name"
+        type="text"
+        placeholder=""
+        {...register("nombre", { required: true })}
+      />
+      <label className="form__label">Praducto</label>
+      {errors.nombre?.type === "required" && <p>Campo requerido</p>}
+    </InputText>
+  </article>
 
-            <InputWrapper>
-              <Label>
-                <FaTags /> Descripción
-              </Label>
-              <TextArea
-                {...register("_description", { required: "Este campo es obligatorio" })}
-              />
-              {errors._description && <ErrorMessage>{errors._description.message}</ErrorMessage>}
-            </InputWrapper>
+  {/* Descripción */}
+  <article>
+    <InputText icono={<v.iconomarca />}>
+      <input
+        className="form__field"
+        defaultValue={memoizedData.description} // Valor por defecto para "description"
+        type="text"
+        placeholder=""
+        {...register("descripcion", { required: true })}
+      />
+      <label className="form__label">Descripcion</label>
+      {errors.descripcion?.type === "required" && <p>Campo requerido</p>}
+    </InputText>
+  </article>
 
-            <InputWrapper>
-              <Label>
-                <FaRegMoneyBillAlt /> Precio
-              </Label>
-              <Input
-                type="number"
-                step="0.01"
-                {...register("_price", {
-                  required: "Este campo es obligatorio",
-                  min: { value: 0, message: "El precio debe ser mayor o igual a 0" },
-                })}
-              />
-              {errors._price && <ErrorMessage>{errors._price.message}</ErrorMessage>}
-            </InputWrapper>
+  {/* Precio */}
+  <article>
+    <InputText icono={<v.iconomarca />}>
+      <input
+        className="form__field"
+        defaultValue={memoizedData.price} // Valor por defecto para "price"
+        type="number"
+        step="0.01" // Permite valores decimales
+        placeholder=""
+        {...register("precio", { required: true, min: 0 })}
+      />
+      <label className="form__label">Precio</label>
+      {errors.precio?.type === "required" && <p>Campo requerido</p>}
+      {errors.precio?.type === "min" && <p>El precio debe ser mayor o igual a 0</p>}
+    </InputText>
+  </article>
 
-            <InputWrapper>
-              <Label>
-                <FaWarehouse /> Cantidad en stock
-              </Label>
-              <Input
-                type="number"
-                {...register("_stock_quantity", {
-                  required: "Este campo es obligatorio",
-                  min: { value: 0, message: "La cantidad debe ser mayor o igual a 0" },
-                })}
-              />
-              {errors._stock_quantity && <ErrorMessage>{errors._stock_quantity.message}</ErrorMessage>}
-            </InputWrapper>
-          </Section>
+  {/* Cantidad en Stock */}
+  <article>
+    <InputText icono={<v.iconomarca />}>
+      <input
+        className="form__field"
+        defaultValue={memoizedData.stock_quantity} // Valor por defecto para "stock_quantity"
+        type="number"
+        placeholder=""
+        {...register("stock_quantity", { required: true, min: 0 })}
+      />
+      <label className="form__label">Cantidad en Stock</label>
+      {errors.stock_quantity?.type === "required" && <p>Campo requerido</p>}
+      {errors.stock_quantity?.type === "min" && <p>El stock debe ser mayor o igual a 0</p>}
+    </InputText>
+  </article>
 
-          <Section>
-            <InputWrapper>
-              <Label>
-                <FaTags /> ID de Categoría
-              </Label>
-              <Input
-                type="number"
-                {...register("_category_id", {
-                  required: "Este campo es obligatorio",
-                  min: { value: 1, message: "El ID debe ser mayor a 0" },
-                })}
-              />
-              {errors._category_id && <ErrorMessage>{errors._category_id.message}</ErrorMessage>}
-            </InputWrapper>
+  {/* Categoría */}
+  <article>
+    <InputText icono={<v.iconomarca />}>
+      <select
+        className="form__field"
+        defaultValue={memoizedData.category_id} // Valor por defecto para "category_id"
+        {...register("category_id", { required: true })}
+      >
+        <option value="" disabled>
+          Seleccione una categoría
+        </option>
+        {/* Opciones dinámicas ajustadas a tu sistema */}
+        <option value="1">Categoría 1</option>
+        <option value="2">Categoría 2</option>
+        <option value="3">Categoría 3</option>
+      </select>
+      <label className="form__label">Categoría</label>
+      {errors.category_id?.type === "required" && <p>Campo requerido</p>}
+    </InputText>
+  </article>
 
-            <InputWrapper>
-              <Label>
-                <FaCheckCircle /> ¿Está activo?
-              </Label>
-              <Select
-                defaultValue={dataSelect?._is_active?.toString() || "true"}
-                {...register("_is_active", { required: "Seleccione un estado" })}
-              >
-                <option value="true">Activo</option>
-                <option value="false">Inactivo</option>
-              </Select>
-              {errors._is_active && <ErrorMessage>{errors._is_active.message}</ErrorMessage>}
-            </InputWrapper>
-          </Section>
+  {/* Estado Activo */}
+  <article>
+    <InputText icono={<v.iconomarca />}>
+      <select
+        className="form__field"
+        defaultValue={memoizedData.is_active ? "true" : "false"} // Valor por defecto para "is_active"
+        {...register("is_active", { required: true })}
+      >
+        <option value="true">Activo</option>
+        <option value="false">Inactivo</option>
+      </select>
+      <label className="form__label">Estado</label>
+      {errors.is_active?.type === "required" && <p>Campo requerido</p>}
+    </InputText>
+  </article>
 
-          <ButtonGuardar type="submit">Guardar Producto</ButtonGuardar>
+  {/* Botón Guardar */}
+  <div className="btnguardarContent">
+    <Btnsave icono={<v.iconoguardar />} titulo="Guardar" bgcolor="#ef552b" />
+  </div>
+</section>
+
+          
         </form>
       </div>
     </Container>
   );
 }
 
-// Estilos del modal y componentes
 const Container = styled.div`
-  position: fixed;
+  transition: 0.5s;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  position: fixed;
   background-color: rgba(10, 9, 9, 0.5);
   display: flex;
+  width: 100%;
+  min-height: 100vh;
   align-items: center;
   justify-content: center;
   z-index: 1000;
@@ -151,105 +204,42 @@ const Container = styled.div`
   .sub-contenedor {
     width: 500px;
     max-width: 85%;
-    background: #fff;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
-  }
+    border-radius: 20px;
+    background: ${({ theme }) => theme.bgtotal};
+    box-shadow: -10px 15px 30px rgba(10, 9, 9, 0.4);
+    padding: 13px 36px 20px 36px;
+    z-index: 100;
 
-  .headers {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+    .headers {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
 
-    h1 {
-      font-size: 20px;
-      font-weight: bold;
+      h1 {
+        font-size: 20px;
+        font-weight: 500;
+      }
+      span {
+        font-size: 20px;
+        cursor: pointer;
+      }
+    }
+
+    .formulario {
+      section {
+        gap: 20px;
+        display: flex;
+        flex-direction: column;
+        .colorContainer {
+          .colorPickerContent {
+            padding-top: 15px;
+            min-height: 50px;
+          }
+        }
+      }
     }
   }
 `;
 
-const CloseButton = styled.span`
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-`;
-
-const Section = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-`;
-
-const InputWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Label = styled.label`
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-
-  &:focus {
-    border-color: #ef552b;
-    box-shadow: 0 0 5px rgba(239, 85, 43, 0.5);
-  }
-`;
-
-const TextArea = styled.textarea`
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  resize: none;
-
-  &:focus {
-    border-color: #ef552b;
-    box-shadow: 0 0 5px rgba(239, 85, 43, 0.5);
-  }
-`;
-
-const Select = styled.select`
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-
-  &:focus {
-    border-color: #ef552b;
-    box-shadow: 0 0 5px rgba(239, 85, 43, 0.5);
-  }
-`;
-
-const ErrorMessage = styled.span`
-  font-size: 12px;
-  color: #e74c3c;
-`;
-
-const ButtonGuardar = styled.button`
-  background-color: #ef552b;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 20px;
-
-  &:hover {
-    background-color: #d64a25;
-  }
-`;
+// Estilización permanece igual
