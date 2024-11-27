@@ -43,15 +43,29 @@ export async function editarCategoria(id, category_name, description) {
 }
 
 export async function eliminarCategoria(id) {
+  
+  
+  // Paso 1: Desvincular los productos de la categoría
+  const { data: updatedProducts, error: updateError } = await supabase
+    .from('products')
+    .update({ category_id: null }) // Establecemos category_id como null
+    .eq('category_id', id); // Solo productos asociados con la categoría
+
+  if (updateError) {
+    console.error("Error desvinculando productos de la categoría:", updateError);
+    return { success: false, message: "Failed to unlink products from the category" };
+  }
+
+  // Paso 2: Eliminar la categoría
   const { data, error } = await supabase
     .from('categories')
     .delete()
-    .eq('category_id', id); // Ensuring we delete the category with the matching ID
+    .eq('category_id', id); // Asegurándonos de eliminar solo la categoría correspondiente
 
   if (error) {
-    console.error("Error deleting category:", error);
+    console.error("Error eliminando la categoría:", error);
     return { success: false, message: "Failed to delete category" };
   }
 
-  return { success: true, data }; // Return the deleted data
+  return { success: true, data, updatedProducts }; // Retornar datos eliminados y productos actualizados
 }
