@@ -3,12 +3,6 @@ import Swal from "sweetalert2";
 
 // Insertar un paquete completo con los productos asociados
 export async function InsertarPaquete(paquete, productos) {
-    // `paquete` es un objeto que representa la información del paquete. Ejemplo:
-    // { nombre: "Paquete 1", precio: 100.0 }
-
-    // `productos` es un array de objetos que representa los productos asociados al paquete. Ejemplo:
-    // [{ producto_id: 1, cantidad: 2 }, { producto_id: 3, cantidad: 5 }]
-
     const { data, error: errorPaquete } = await supabase
         .from("paquetes")
         .insert(paquete)
@@ -55,8 +49,6 @@ export async function InsertarPaquete(paquete, productos) {
 
 // Mostrar los detalles de un paquete
 export async function MostrarPaquete(p) {
-    // `p` es un objeto que contiene el identificador del paquete a buscar. Ejemplo:
-    // { id_paquete: 1 }
     console.log("Ejecutando MostrarPaquete con", p);
     const { data, error } = await supabase
         .from("paquete_producto ")
@@ -65,7 +57,7 @@ export async function MostrarPaquete(p) {
             paquetes (id_paquete, nombre, precio),
             products (name)
         `)
-        .eq("id_paquete", p.id_paquete)
+        .eq("id_paquete", p.id_paquete);
 
     if (error) {
         console.error("Error al consultar los datos:", error);
@@ -75,11 +67,27 @@ export async function MostrarPaquete(p) {
     return data;
 }
 
+// Mostrar todos los paquetes
+export async function MostrarTodosPaquetes() {
+    console.log("Ejecutando MostrarTodosPaquetes");
+    const { data, error } = await supabase
+        .from("paquete_producto")
+        .select(`
+            cantidad,
+            paquetes (id_paquete, nombre, precio),
+            products (name)
+        `);
+
+    if (error) {
+        console.error("Error al consultar todos los paquetes:", error);
+        return null;
+    }
+    console.log("Todos los paquetes:", data);
+    return data;
+}
 
 // Eliminar un paquete y sus productos relacionados
 export async function EliminarPaquete(p) {
-    // `p` es un objeto que contiene el identificador del paquete a eliminar. Ejemplo:
-    // { id_paquete: 1 }
     console.log("Ejecutando EliminarPaquete con", p);
     const { error: errorRelacionados } = await supabase
         .from("paquete_producto")
@@ -109,21 +117,13 @@ export async function EliminarPaquete(p) {
 
 // Editar los detalles de un paquete o productos asociados
 export async function EditarPaquete(p, paqueteId, productoIdActual, nuevoProductoId, nuevaCantidad) {
-    // `p` contiene los nuevos datos del paquete. Ejemplo:
-    // { nombre: "Nuevo Nombre", precio: 150.0 }
-
-    // `paqueteId` es el ID del paquete que se está editando.
-    // `productoIdActual` es el ID del producto que se está actualizando.
-    // `nuevoProductoId` es el nuevo ID del producto (puede ser el mismo que el actual).
-    // `nuevaCantidad` es la nueva cantidad del producto.
-
     const { error: errorPaquete } = await supabase
         .from("paquetes")
         .update({
             nombre: p.nombre,
             precio: p.precio
         })
-        .eq("id", paqueteId);
+        .eq("id_paquete", paqueteId);
 
     if (errorPaquete) {
         console.error("Error al editar el paquete:", errorPaquete.message);
@@ -178,9 +178,6 @@ export async function EditarPaquete(p, paqueteId, productoIdActual, nuevoProduct
 
 // Buscar paquetes por nombre
 export async function BuscarPaquete(p) {
-    // `p` es un objeto que contiene los criterios de búsqueda. Ejemplo:
-    // { nombre: "Paquete", id_producto: 1 }
-
     const { data, error } = await supabase
         .from("paquetes")
         .select()

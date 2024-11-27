@@ -1,8 +1,10 @@
 import { create } from "zustand";
 import { BuscarPaquete, 
     MostrarPaquete, 
+    MostrarTodosPaquetes, // Asegúrate de tener esta función implementada
     EliminarPaquete, 
     InsertarPaquete, 
+    EditarPaquete
 } from "../index";
 
 export const usePaqueteStore = create((set, get) => ({
@@ -26,6 +28,16 @@ export const usePaqueteStore = create((set, get) => ({
             return response;
         } catch (error) {
             console.error("Error al mostrar el paquete:", error);
+        }
+    },
+
+    mostrarTodosPaquetes: async () => { // Nueva función
+        try {
+            const response = await MostrarTodosPaquetes();
+            set({ datapaquete: response });
+            return response;
+        } catch (error) {
+            console.error("Error al mostrar todos los paquetes:", error);
         }
     },
 
@@ -68,6 +80,21 @@ export const usePaqueteStore = create((set, get) => ({
             set({ datapaquete: response });
         } catch (error) {
             console.error("Error al buscar paquete:", error);
+        }
+    },
+    editarPaquete: async (p) => {
+        if (!p || !p.id_paquete) {
+            console.error("Parámetro inválido para editar paquete");
+            return;
+        }
+        set({ isLoading: true });
+        try {
+            await EditarPaquete(p);
+            get().reconsultarPaquetes(); // Reconsultar para actualizar la lista
+        } catch (error) {
+            console.error("Error al editar paquete:", error);
+        } finally {
+            set({ isLoading: false });
         }
     },
 }));
