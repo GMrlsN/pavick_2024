@@ -1,6 +1,6 @@
 import { Routes,Route } from "react-router-dom";
 import {
-    Categoria,
+    Categorias,
     ErrorMolecula,
     Home, 
     Login, 
@@ -36,7 +36,7 @@ export function MyRoutes(){
                 <Route path="/" element={<Home />}/>
                 <Route path="/configurar" element={<Configuracion />} />
                 <Route path="/configurar/paquetes" element={<Paquetes />} />
-                <Route path="/configurar/categorias" element={<Categoria />} />
+                <Route path="/configurar/categorias" element={<Categorias />} />
                 <Route path="/configurar/productos" element={<Productos />} />
                 <Route path="/configurar/usuarios" element={<Personal />} />
             </Route>

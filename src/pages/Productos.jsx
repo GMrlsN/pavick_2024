@@ -15,7 +15,7 @@ export function Productos() {
   const { data: buscardata } = useQuery({
     queryKey: ["buscar productos", { descripcion: buscador }],
     queryFn: () => buscarproductos({ buscador }),
-    enabled: buscador.trim() !== "", // Solo ejecuta si `buscador` no está vacío
+    //enabled: buscador.trim() !== "", // Solo ejecuta si `buscador` no está vacío
   });
   // Mostrar un loader si los datos están cargando
   if (isLoading) {

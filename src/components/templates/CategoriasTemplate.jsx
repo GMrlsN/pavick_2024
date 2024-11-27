@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { BtnFiltro, Buscador, ContentFiltro, Header,  RegistrarProductos, TablaProductos, Title,useProductosStore,v } from "../../index";
+import { BtnFiltro, Buscador, ContentFiltro, Header, RegistrarCategorias,  TablaCategorias, Title,useCategoriasStore,v } from "../../index";
 import { useState } from "react";
-export function ProductosTemplate({data}) {
+export function CategoriasTemplate({data}) {
   const [state, setState] = useState(false);
   const [dataSelect, setdataSelect] = useState([]);
   const [accion, setAccion] = useState("");
@@ -11,11 +11,11 @@ export function ProductosTemplate({data}) {
     setAccion("Nuevo")
     setdataSelect([])
   }
-  const {setBuscador} = useProductosStore()
+  const {setBuscador} = useCategoriasStore()
   return (
     <Container>
       {
-        openRegistro &&  <RegistrarProductos dataSelect={dataSelect} accion={accion} onClose={()=>SetopenRegistro(!openRegistro)}/>
+        openRegistro &&  <RegistrarCategorias dataSelect={dataSelect} accion={accion} onClose={()=>SetopenRegistro(!openRegistro)}/>
       }
      
       <header className="header">
@@ -26,16 +26,18 @@ export function ProductosTemplate({data}) {
       <section className="area1">
         <ContentFiltro>
           <Title>
-            Productos
+            Categorias
           </Title>
            <BtnFiltro funcion={nuevoRegistro} bgcolor="#f6f3f3"
             textcolor="#353535"
             icono={<v.agregar/>}/>
         </ContentFiltro>
         <Buscador setBuscador={setBuscador}/>
+
       </section>
+      
       <section className="main">
-        <TablaProductos data={data} SetopenRegistro={SetopenRegistro}
+        <TablaCategorias data={data} SetopenRegistro={SetopenRegistro}
         setdataSelect={setdataSelect} setAccion={setAccion}/>
       </section>
     </Container>
@@ -76,4 +78,4 @@ const Container = styled.div`
     grid-area: main;
     /* background-color: rgba(179, 46, 241, 0.14); */
   }
-`;
+`; 

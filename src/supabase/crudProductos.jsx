@@ -17,21 +17,21 @@ export async function MostrarProductos(p) {
     return data;
   
 }
-export async function EliminarProductos(p) {
+export async function EliminarProductos(id) {
  
     const { error } = await supabase
-      .from("productos")
+      .from("products")
       .delete()
-      .eq("id", p.id);
+      .eq("product_id", id);
     if (error) {
       alert("Error al eliminar", error.message);
     }
 }
 export async function EditarProductos(p) {
     const { error } = await supabase
-      .from("productos")
+      .from("products")
       .update(p)
-      .eq("id", p.id);
+      .eq("product_id", p.product_id);
     if (error) {
       alert("Error al editar Productos", error.message);
     }
