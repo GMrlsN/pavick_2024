@@ -21,15 +21,17 @@ export async function MostrarPersonal(p) {
     }
     return data;
 }
+
 export async function EliminarPersonal(p) {
-    const {error} = await supabase
-        .from("usuarios")
-        .delete()
-        .eq("id", p.id);  // Filtra por id del usuario
+    const { error } = await supabase
+      .from("usuarios")
+      .delete()
+      .eq("id", p.id);  // Filtra por id del usuario
     if (error) {
-        alert("Error al eliminar usuario: " + error.message);
+      alert("Error al eliminar usuario: " + error.message);
     }
-}
+  }
+  
 export async function EditarPersonal(p) {
     const {error} = await supabase
         .from("usuarios")

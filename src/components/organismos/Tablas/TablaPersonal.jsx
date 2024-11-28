@@ -9,11 +9,13 @@ import {
   import styled from "styled-components";
   import Swal from "sweetalert2";
   import { FaArrowsAltV } from "react-icons/fa";
-  import { ContentAccionesTabla, useUsuariosStore, Paginacion } from "../../../index"; // Ajustar imports según tu estructura
+  import { ContentAccionesTabla, useUsuariosStore, Paginacion, usePersonalStore } from "../../../index"; // Ajustar imports según tu estructura
   import { useState } from "react";
     
-  export function TablaPersonal({ data, setopenRegistraUsuario, setdataSelect, setAccion }) {
+  export function TablaPersonal({ data, setopenRegistraUsuario, setdataSelect, setAccion }) 
+  {
     const [pagina, setPagina] = useState(1);
+    const { eliminarPersonal } = usePersonalStore(); // Ajustar según tu store
     const editar = (data) => {
       if (data.nombre === "Usuario Admin") { // Cambia la condición según tu lógica
         Swal.fire({
@@ -46,8 +48,10 @@ import {
         confirmButtonText: "Sí, eliminar",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          // Llama a la función de eliminación aquí
-          // await eliminarUsuario({ id_usuario: p.id_usuario });
+          // Aquí llamas a la función para eliminar el usuario
+          await eliminarPersonal(p);
+          // Puedes agregar un mensaje de éxito
+          Swal.fire('Eliminado!', 'El usuario ha sido eliminado correctamente.', 'success');
         }
       });
     };
