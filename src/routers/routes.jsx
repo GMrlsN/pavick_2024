@@ -7,6 +7,7 @@ import {
     Paquetes,
     Productos,
     Personal, 
+    Ordenes,
     ProtectedRoute,
     SpinnerLoader,
     UserAuth, 
@@ -39,6 +40,7 @@ export function MyRoutes(){
                 <Route path="/configurar/categorias" element={<Categorias />} />
                 <Route path="/configurar/productos" element={<Productos />} />
                 <Route path="/configurar/usuarios" element={<Personal />} />
+                <Route path="/configurar/empresa" element={<Ordenes />} />
             </Route>
         </Routes>
     );
