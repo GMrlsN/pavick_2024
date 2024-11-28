@@ -86,7 +86,7 @@ export function LoginTemplate() {
               <Btnsave titulo="Iniciar" bgcolor="#416b48" />
               <Btnsave
                 funcion={() => setState(!state)}
-                titulo="Crear cuenta"
+                titulo=" cuenta"
                 bgcolor="#ffffff"
               />
             </ContainerBtn>

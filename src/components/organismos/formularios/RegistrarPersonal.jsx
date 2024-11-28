@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import styled from "styled-components";
 import { v } from "../../../styles/variables";
-import { InputText, Btnsave, ConvertirCapitalize, usePersonalStore } from "../../../index";
+import { ObtenerIdAuthSupabase, InputText, Btnsave, usePersonalStore } from "../../../index";
 import { useForm } from "react-hook-form";
+
 export function RegistrarPersonal({ onClose, dataSelect, accion }) {
   const { insertarPersonal, editarPersonal } = usePersonalStore();
   const {
@@ -10,47 +11,47 @@ export function RegistrarPersonal({ onClose, dataSelect, accion }) {
     formState: { errors },
     handleSubmit,
   } = useForm();
-  // Función para manejar el envío del formulario
+
+
+  // Memorizar valores por defecto para evitar renders innecesarios
+  const memoizedData = useMemo(() => {
+    return {
+      nombres: dataSelect?.nombres || "",
+      telefono: dataSelect?.telefono || "",
+      correo: dataSelect?.correo || "",
+      tipouser: dataSelect?.tipouser || "",
+      direccion: dataSelect?.direccion || "",
+      fecharegistro: dataSelect?.fecharegistro || new Date().toISOString(),
+      estado: dataSelect?.estado || "activo",
+    };
+  }, [dataSelect]);
+
+  // Acción para insertar personal
   async function insertar(data) {
+    const p = {
+      nombres: data.nombres,
+      telefono: data.telefono,
+      correo: data.correo,
+      tipouser: data.tipouser,
+      direccion: data.direccion,
+      fecharegistro: data.fecharegistro || new Date().toISOString(),
+      estado: data.estado || "activo",
+      idauth: await ObtenerIdAuthSupabase(), // Obtener el idAuth
+    };
+
+    // Verificar si la acción es de editar o insertar
     if (accion === "Editar") {
-      const p = {
-        id_personal: dataSelect.id, // Usamos el id de la persona a editar
-        nombres: ConvertirCapitalize(data.nombres),
-        telefono: ConvertirCapitalize(data.telefono),
-        correo: ConvertirCapitalize(data.correo),
-        tipouser: ConvertirCapitalize(data.tipouser),
-        // Otros campos que no se muestran pero podrían ser necesarios:
-        // nro_doc: data.nro_doc,
-        // direccion: data.direccion,
-        // estado: data.estado,
-        // tipodoc: data.tipodoc,
-        // fecharegistro: data.fecharegistro
-      };
+      // Llamar a la función de edición de personal
       await editarPersonal(p);
-      onClose();
     } else {
-      const p = {
-        nombres: ConvertirCapitalize(data.nombres),
-        telefono: ConvertirCapitalize(data.telefono),
-        correo: ConvertirCapitalize(data.correo),
-        tipouser: ConvertirCapitalize(data.tipouser),
-        // Otros campos que no se muestran:
-        // nro_doc: data.nro_doc,
-        // direccion: data.direccion,
-        // estado: data.estado,
-        // tipodoc: data.tipodoc,
-        // fecharegistro: new Date() // Si quieres asignar la fecha de registro
-      };
+      // Llamar a la función para insertar nuevo personal
       await insertarPersonal(p);
-      onClose();
     }
+
+    // Cerrar el formulario una vez insertado o editado
+    onClose();
   }
-  // Si la acción es "Editar", cargamos los datos existentes en los campos del formulario
-  useEffect(() => {
-    if (accion === "Editar" && dataSelect) {
-      // Prellenar los campos si estamos editando
-    }
-  }, [accion, dataSelect]);
+
   return (
     <Container>
       <div className="sub-contenedor">
@@ -69,15 +70,13 @@ export function RegistrarPersonal({ onClose, dataSelect, accion }) {
               <InputText icono={<v.iconomarca />}>
                 <input
                   className="form__field"
-                  defaultValue={dataSelect?.nombres || ""}
                   type="text"
                   placeholder="Nombre completo"
-                  {...register("nombres", {
-                    required: true,
-                  })}
+                  defaultValue={memoizedData.nombres} // Valor por defecto
+                  {...register("nombres", { required: "El nombre es obligatorio" })}
                 />
                 <label className="form__label">Nombre</label>
-                {errors.nombres?.type === "required" && <p>Campo requerido</p>}
+                {errors.nombres && <p>{errors.nombres.message}</p>}
               </InputText>
             </article>
             {/* Campo de teléfono */}
@@ -85,15 +84,16 @@ export function RegistrarPersonal({ onClose, dataSelect, accion }) {
               <InputText icono={<v.iconomarca />}>
                 <input
                   className="form__field"
-                  defaultValue={dataSelect?.telefono || ""}
                   type="text"
                   placeholder="Teléfono"
+                  defaultValue={memoizedData.telefono} // Valor por defecto
                   {...register("telefono", {
-                    required: true,
+                    required: "El teléfono es obligatorio",
+                    pattern: { value: /^[0-9]{10}$/, message: "Debe ser un número de 10 dígitos" },
                   })}
                 />
                 <label className="form__label">Teléfono</label>
-                {errors.telefono?.type === "required" && <p>Campo requerido</p>}
+                {errors.telefono && <p>{errors.telefono.message}</p>}
               </InputText>
             </article>
             {/* Campo de correo */}
@@ -101,15 +101,19 @@ export function RegistrarPersonal({ onClose, dataSelect, accion }) {
               <InputText icono={<v.iconomarca />}>
                 <input
                   className="form__field"
-                  defaultValue={dataSelect?.correo || ""}
                   type="email"
                   placeholder="Correo electrónico"
+                  defaultValue={memoizedData.correo} // Valor por defecto
                   {...register("correo", {
-                    required: true,
+                    required: "El correo es obligatorio",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Correo no válido",
+                    },
                   })}
                 />
                 <label className="form__label">Correo</label>
-                {errors.correo?.type === "required" && <p>Campo requerido</p>}
+                {errors.correo && <p>{errors.correo.message}</p>}
               </InputText>
             </article>
             {/* Campo de tipo de usuario */}
@@ -117,15 +121,13 @@ export function RegistrarPersonal({ onClose, dataSelect, accion }) {
               <InputText icono={<v.iconomarca />}>
                 <input
                   className="form__field"
-                  defaultValue={dataSelect?.tipouser || ""}
                   type="text"
                   placeholder="Tipo de usuario"
-                  {...register("tipouser", {
-                    required: true,
-                  })}
+                  defaultValue={memoizedData.tipouser} // Valor por defecto
+                  {...register("tipouser", { required: "El tipo de usuario es obligatorio" })}
                 />
                 <label className="form__label">Tipo de Usuario</label>
-                {errors.tipouser?.type === "required" && <p>Campo requerido</p>}
+                {errors.tipouser && <p>{errors.tipouser.message}</p>}
               </InputText>
             </article>
             <div className="btnguardarContent">
@@ -141,6 +143,7 @@ export function RegistrarPersonal({ onClose, dataSelect, accion }) {
     </Container>
   );
 }
+
 const Container = styled.div`
   transition: 0.5s;
   top: 0;
@@ -153,6 +156,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1000;
+
   .sub-contenedor {
     width: 500px;
     max-width: 85%;
@@ -161,6 +165,7 @@ const Container = styled.div`
     box-shadow: -10px 15px 30px rgba(10, 9, 9, 0.4);
     padding: 13px 36px 20px 36px;
     z-index: 100;
+
     .headers {
       display: flex;
       justify-content: space-between;
@@ -180,12 +185,6 @@ const Container = styled.div`
         gap: 20px;
         display: flex;
         flex-direction: column;
-        .colorContainer {
-          .colorPickerContent {
-            padding-top: 15px;
-            min-height: 50px;
-          }
-        }
       }
     }
   }

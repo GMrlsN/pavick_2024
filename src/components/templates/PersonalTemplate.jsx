@@ -14,8 +14,8 @@ import { useState } from "react";
 
 export function PersonalTemplate({data}) {
     const [state, setState] = useState(false);
-    const [openRegistrarPersonal, setOpenRegistrarPersonal] = useState(false);
     const [dataSelect, setDataSelect] = useState({});
+    const [openRegistrarPersonal, setOpenRegistrarPersonal] = useState(false);
     const [accion, setAccion] = useState("");
 
     const nuevoRegistro = () => {
@@ -32,7 +32,7 @@ export function PersonalTemplate({data}) {
           <RegistrarPersonal
             dataSelect={dataSelect} 
             accion={accion} 
-            onClose={() => setOpenRegistraPersonal(!openRegistrarPersonal)} 
+            onClose={() => setOpenRegistrarPersonal(!openRegistrarPersonal)} 
           />
         }
         <header className="header">
