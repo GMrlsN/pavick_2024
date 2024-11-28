@@ -18,14 +18,16 @@ export async function InsertarPaquete(paquete, productos) {
         return null;
     }
 
-    const paqueteId = data[0].id;
+    const paqueteId = data[0].id_paquete;
 
+    // Asegúrate de que los productos tengan la estructura adecuada antes de insertarlos
     const productosConPaqueteId = productos.map(producto => ({
         id_paquete: paqueteId,
         product_id: producto.producto_id,
         cantidad: producto.cantidad
     }));
 
+    // Insertar los productos en la tabla intermedia paquete_producto
     const { error: errorProductos } = await supabase
         .from("paquete_producto")
         .insert(productosConPaqueteId);
@@ -51,7 +53,7 @@ export async function InsertarPaquete(paquete, productos) {
 export async function MostrarPaquete(p) {
     console.log("Ejecutando MostrarPaquete con", p);
     const { data, error } = await supabase
-        .from("paquete_producto ")
+        .from("paquete_producto")
         .select(`
             cantidad,
             paquetes (id_paquete, nombre, precio),
@@ -69,20 +71,19 @@ export async function MostrarPaquete(p) {
 
 // Mostrar todos los paquetes
 export async function MostrarTodosPaquetes() {
-    console.log("Ejecutando MostrarTodosPaquetes");
     const { data, error } = await supabase
-        .from("paquete_producto")
+        .from("paquetes")
         .select(`
-            cantidad,
-            paquetes (id_paquete, nombre, precio),
-            products (name)
+            id_paquete,
+            nombre,
+            precio,
+            paquete_producto (cantidad, products (name))
         `);
 
     if (error) {
-        console.error("Error al consultar todos los paquetes:", error);
-        return null;
+        console.error("Error:", error);
+        return [];
     }
-    console.log("Todos los paquetes:", data);
     return data;
 }
 
@@ -131,6 +132,7 @@ export async function EditarPaquete(p, paqueteId, productoIdActual, nuevoProduct
         return null;
     }
 
+    // Si el producto actual es el mismo que el nuevo, solo actualizamos la cantidad
     if (productoIdActual === nuevoProductoId) {
         const { error: errorCantidad } = await supabase
             .from("paquete_producto")
@@ -147,6 +149,7 @@ export async function EditarPaquete(p, paqueteId, productoIdActual, nuevoProduct
             return true;
         }
     } else {
+        // Primero eliminamos el producto actual
         const { error: errorEliminar } = await supabase
             .from("paquete_producto")
             .delete()
@@ -159,6 +162,7 @@ export async function EditarPaquete(p, paqueteId, productoIdActual, nuevoProduct
             return null;
         }
 
+        // Luego insertamos el nuevo producto
         const { error: errorInsertar } = await supabase
             .from("paquete_producto")
             .insert([

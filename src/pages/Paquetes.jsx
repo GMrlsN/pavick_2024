@@ -1,29 +1,52 @@
-import { useQuery } from "@tanstack/react-query";
-import { PaqueteTemplate, usePaqueteStore, SpinnerLoader } from "../index";
+import React from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { PaqueteTemplate, SpinnerLoader, usePaqueteStore } from "../index";
 
 export function Paquetes() {
-  const { mostrarTodosPaquetes, datapaquete } = usePaqueteStore();
+  const { mostrarTodosPaquetes, buscarPaquete, buscador, datapaquete } = usePaqueteStore();
 
-  console.log("Ejecutando Paquetes");
+  // Cargar todos los paquetes
+  const { isLoading: isLoadingPaquetes, error: errorPaquetes, data: dataPaquetes } = useQuery({
+    queryKey: ["mostrar todos paquetes"],
+    queryFn: mostrarTodosPaquetes,
+    enabled: true,
+  });
 
-  const { isLoading, error, data } =
-    useQuery({
-      queryKey: ["mostrar todos paquetes"],
-      queryFn: () => mostrarTodosPaquetes(),
-      enabled: true,
-    });
+  // Buscar paquetes específicos con el valor de `buscador`
+  const { mutate: buscarPaqueteMutate, data: buscardata, isLoading: isLoadingBuscar } = useMutation({
+    mutationFn: buscarPaquete,
+  });
 
-  if (isLoading) return <SpinnerLoader message="Cargando paquetes..." />;
-  if (error) {
-    console.error("Error en consultas:", error);
-    return <span>Error al cargar datos</span>;
+  // Ejecutar búsqueda automáticamente cuando `buscador` cambie
+  React.useEffect(() => {
+    if (buscador.trim() !== "") {
+      buscarPaqueteMutate({ nombre: buscador });
+    }
+  }, [buscador, buscarPaqueteMutate]);
+
+  // Mostrar loader si los datos están cargando
+  if (isLoadingPaquetes) {
+    return <SpinnerLoader message="Cargando paquetes..." />;
   }
 
-  const paqueteData = data;
+  if (isLoadingBuscar) {
+    return <SpinnerLoader message="Buscando paquetes..." />;
+  }
 
+  // Manejar errores de consulta
+  if (errorPaquetes) {
+    console.error("Error al cargar paquetes:", errorPaquetes);
+    return <span>Error al cargar paquetes</span>;
+  }
+
+  // Seleccionar datos a mostrar: resultados de búsqueda o todos los paquetes
+  const paqueteData = buscardata || dataPaquetes || datapaquete;
+
+  // Verificar si hay paquetes para mostrar
   if (!paqueteData || paqueteData.length === 0) {
     return <span>No se encontraron paquetes</span>;
   }
 
+  // Renderizar plantilla con los datos
   return <PaqueteTemplate data={paqueteData} />;
 }

@@ -2,11 +2,12 @@ import { supabase } from "../index";
 import Swal from "sweetalert2";
 
 // Insertar un producto
-export async function InsertarProductos(id,name,description,price,stock_quantity,category_id,is_active) {
+export async function InsertarProductos(id,name,description,price,stock_quantity,category_id,is_active, image_id=4) {
   const { data, error } = await supabase
    .from("products")
-   .insert ([{name,description,price,stock_quantity,category_id,is_active}])
+   .insert ([{name,description,price,stock_quantity,category_id,is_active, image_id: image_id || 1 }])
    .eq("product_id", id);
+  
    
    if (error) {
     console.error("Error adding products:", error);

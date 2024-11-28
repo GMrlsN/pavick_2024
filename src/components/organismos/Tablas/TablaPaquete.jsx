@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -9,18 +10,19 @@ import {
 import styled from "styled-components";
 import Swal from "sweetalert2";
 import { FaArrowsAltV } from "react-icons/fa";
-import { ContentAccionesTabla, usePaqueteStore,Paginacion } from "../../../index";
-import { useState } from "react";
+import { ContentAccionesTabla, usePaqueteStore, Paginacion } from "../../../index";
 
 export function TablaPaquete({ data, setopenRegistraPaquete, setdataSelect, setAccion }) {
   const [pagina, setPagina] = useState(1);
   const { eliminarPaquete } = usePaqueteStore();
+
+  // Función para editar un paquete
   const editar = (data) => {
-    if (data.paquetes.nombre === "Paquete para 10 personas") {
+    if (data.paquetes.nombre === "Generico") {
       Swal.fire({
         icon: "error",
         title: "No se puede editar este paquete",
-        text: "Este paquete no puede ser editado",
+        text: "Este paquete no puede ser editado.",
       });
       return;
     }
@@ -29,51 +31,66 @@ export function TablaPaquete({ data, setopenRegistraPaquete, setdataSelect, setA
     setAccion("Editar");
   };
 
-  const eliminar = (p) => {
-    Swal.fire({
-      title: "¿Estás seguro de eliminar este paquete?",
-      text: "No podrás revertir esta acción",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, eliminar",
-    }).then(async (result) => {
+  // Función para eliminar un paquete
+  const eliminar = async (paquete) => {
+    try {
+      const result = await Swal.fire({
+        title: "¿Estás seguro de eliminar este paquete?",
+        text: "No podrás revertir esta acción.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, eliminar",
+      });
+
       if (result.isConfirmed) {
-        await eliminarPaquete({ id_paquete: p.paquetes.id_paquete });
+        await eliminarPaquete({ id_paquete: paquete.paquetes.id_paquete });
+        Swal.fire("Eliminado!", "El paquete ha sido eliminado.", "success");
       }
-    });
+    } catch (error) {
+      Swal.fire("Error", "Hubo un problema al eliminar el paquete.", "error");
+      console.error(error);
+    }
   };
 
+  // Columnas de la tabla
   const columns = [
-    //{
-      //accessorKey: "paquetes.id_paquete",
-      //header: "ID del Paquete",
-      //cell: (info) => <span>{info.getValue()}</span>,
-    //},
     {
-      accessorKey: "paquetes.nombre",
+      accessorKey: "nombre",  // Nombre del paquete
       header: "Nombre del Paquete",
       cell: (info) => <span>{info.getValue()}</span>,
     },
     {
-      accessorKey: "paquetes.precio",
+      accessorKey: "precio",  // Precio del paquete
       header: "Precio del Paquete",
-      cell: (info) => <span>{info.getValue()}</span>,
+      cell: (info) => <span>${info.getValue()}</span>,
     },
     {
-      accessorKey: "products.name",
-      header: "Nombre del Producto",
-      cell: (info) => <span>{info.getValue()}</span>,
+      accessorKey: "productos",  // Productos asociados al paquete
+      header: "Productos Asociados",
+      cell: (info) => {
+        const products = info.getValue();  // Aquí obtienes los productos del paquete
+        return (
+          <td data-title="Productos Asociados" className="ContentCell">
+            {products && products.length > 0 ? (
+              <ul>
+                {products.map((product, index) => (
+                  <li key={index}>
+                    {product.name} (x{product.cantidad})
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <span>No hay productos</span>
+            )}
+          </td>
+        );
+      },
     },
     {
-      accessorKey: "cantidad",
-      header: "Cantidad",
-      cell: (info) => <span>{info.getValue()}</span>,
-    },
-    {
-      accessorKey: "acciones",
-      header: "",
+      accessorKey: "acciones", // Acciones (editar y eliminar)
+      header: "Acciones",
       enableSorting: false,
       cell: (info) => (
         <td className="ContenCell">
@@ -87,7 +104,7 @@ export function TablaPaquete({ data, setopenRegistraPaquete, setdataSelect, setA
   ];
 
   const table = useReactTable({
-    data: data || [], // Asegúrate de que siempre se pase un array, incluso si data es null
+    data: data || [], // Aseguramos que la tabla funcione con datos vacíos.
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -112,10 +129,8 @@ export function TablaPaquete({ data, setopenRegistraPaquete, setdataSelect, setA
                       <FaArrowsAltV />
                     </span>
                   )}
-                  {{
-                    asc: "🔼",
-                    desc: "🔽",
-                  }[header.column.getIsSorted()]}
+                  {header.column.getIsSorted() === "asc" && " 🔼"}
+                  {header.column.getIsSorted() === "desc" && " 🔽"}
                 </th>
               ))}
             </tr>
@@ -145,42 +160,34 @@ export function TablaPaquete({ data, setopenRegistraPaquete, setdataSelect, setA
 }
 
 const Container = styled.div`
-  width: 100%; /* Ocupa todo el ancho del contenedor principal */
+  width: 100%;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  overflow-x: auto; /* Permite desplazamiento horizontal en caso de tablas grandes */
+  overflow-x: auto;
 
   table {
-    width: 100%; /* La tabla ocupa todo el ancho disponible */
+    width: 100%;
     border-collapse: collapse;
-    font-family: Arial, sans-serif;
-
     th, td {
       padding: 10px;
       text-align: center;
-   
     }
 
     th {
-      background-color: ; /* Color del encabezado */
-      color: #050505;
+      background-color: #f2f2f2;
+      color: #333;
       font-weight: bold;
-      border-bottom: 1px solid #050505 ;
-      
+      border-bottom: 1px solid #ccc;
     }
 
     tr:hover {
-      background-color: #c3e0ca; /* Color al pasar el mouse */
+      background-color: #c3e0ca;
     }
 
     td {
       color: #333;
       font-size: 14px;
-
-      &.ContenCell {
-        text-align: center;
-      }
     }
   }
 `;

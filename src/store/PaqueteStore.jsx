@@ -1,100 +1,89 @@
 import { create } from "zustand";
-import { BuscarPaquete, 
-    MostrarPaquete, 
-    MostrarTodosPaquetes, // Asegúrate de tener esta función implementada
-    EliminarPaquete, 
-    InsertarPaquete, 
-    EditarPaquete
+import {
+  BuscarPaquete,
+  MostrarPaquete,
+  MostrarTodosPaquetes,
+  EliminarPaquete,
+  InsertarPaquete,
+  EditarPaquete,
 } from "../index";
 
 export const usePaqueteStore = create((set, get) => ({
-    buscador: "",
-    isLoading: false,
-    datapaquete: [],
-    paqueteItemSelect: [],
-    parametros: {},
+  buscador: "",
+  datapaquete: [], // Lista de todos los paquetes
+  isLoading: false, // Indicador de carga
 
-    setBuscador: (p) => set({ buscador: p }),
+  // Setear término de búsqueda
+  setBuscador: (nuevoBuscador) => set({ buscador: nuevoBuscador }),
 
-    mostrarPaquete: async (p) => {
-        console.log("Ejecutando mostrar Paquete con", p);
-        if (!p || !p.id_paquete) {
-            console.error("Parámetro inválido para mostrar Paquete");
-            return;
-        }
-        try {
-            const response = await MostrarPaquete(p);
-            set({ parametros: p, datapaquete: response, paqueteItemSelect: response[0] });
-            return response;
-        } catch (error) {
-            console.error("Error al mostrar el paquete:", error);
-        }
-    },
+  // Mostrar todos los paquetes
+  mostrarTodosPaquetes: async () => {
+    try {
+      const response = await MostrarTodosPaquetes();
+      set({ datapaquete: response });
+      return response;
+    } catch (error) {
+      console.error("Error al mostrar todos los paquetes:", error);
+      throw error;
+    }
+  },
 
-    mostrarTodosPaquetes: async () => { // Nueva función
-        try {
-            const response = await MostrarTodosPaquetes();
-            set({ datapaquete: response });
-            return response;
-        } catch (error) {
-            console.error("Error al mostrar todos los paquetes:", error);
-        }
-    },
+  // Buscar un paquete por nombre
+  buscarPaquete: async ({ nombre }) => {
+    try {
+      const response = await BuscarPaquete({ nombre });
+      set({ datapaquete: response });
+      return response;
+    } catch (error) {
+      console.error("Error al buscar paquete:", error);
+      throw error;
+    }
+  },
 
-    reconsultarPaquetes: () => {
-        const { mostrarPaquete, parametros } = get();
-        if (parametros) mostrarPaquete(parametros);
-    },
+  // Eliminar un paquete por ID
+  eliminarPaquete: async (id_paquete) => {
+    set({ isLoading: true }); // Activar indicador de carga
+    try {
+      if (!id_paquete) {
+        throw new Error("ID de paquete no válido para eliminar.");
+      }
 
-    insertarPaquete: async (p) => {
-        set({ isLoading: true });
-        try {
-            await InsertarPaquete(p);
-            get().reconsultarPaquetes();
-        } catch (error) {
-            console.error("Error al insertar paquete:", error);
-        } finally {
-            set({ isLoading: false });
-        }
-    },
+      await EliminarPaquete({ id_paquete }); // Llamada al backend para eliminar
+      const nuevaLista = get().datapaquete.filter((p) => p.id_paquete !== id_paquete);
+      set({ datapaquete: nuevaLista }); // Actualizar la lista de paquetes
 
-    eliminarPaquete: async (p) => {
-        set({ isLoading: true });
-        try {
-            await EliminarPaquete(p);
-            get().reconsultarPaquetes();
-        } catch (error) {
-            console.error("Error al eliminar paquete:", error);
-        } finally {
-            set({ isLoading: false });
-        }
-    },
+      return { success: true };
+    } catch (error) {
+      console.error("Error al eliminar paquete:", error);
+      return { success: false, error: error.message };
+    } finally {
+      set({ isLoading: false }); // Desactivar indicador de carga
+    }
+  },
 
-    buscarPaquete: async (p) => {
-        if (!p || !p.nombre) {
-            console.error("Parámetro inválido para buscarPaquete");
-            return;
-        }
-        try {
-            const response = await BuscarPaquete(p);
-            set({ datapaquete: response });
-        } catch (error) {
-            console.error("Error al buscar paquete:", error);
-        }
-    },
-    editarPaquete: async (p) => {
-        if (!p || !p.id_paquete) {
-            console.error("Parámetro inválido para editar paquete");
-            return;
-        }
-        set({ isLoading: true });
-        try {
-            await EditarPaquete(p);
-            get().reconsultarPaquetes(); // Reconsultar para actualizar la lista
-        } catch (error) {
-            console.error("Error al editar paquete:", error);
-        } finally {
-            set({ isLoading: false });
-        }
-    },
+  // Editar un paquete con sus productos asociados
+  editarPaquete: async (id_paquete, paquete, productos) => {
+    set({ isLoading: true }); // Activar indicador de carga
+    try {
+      if (!id_paquete || !paquete || !productos || productos.length === 0) {
+        throw new Error("Datos inválidos para editar paquete.");
+      }
+
+      const payload = { ...paquete, productos };
+      await EditarPaquete(id_paquete, payload); // Llamada al backend para editar
+
+      // Actualizar el paquete en la lista local
+      const nuevaLista = get().datapaquete.map((p) =>
+        p.id_paquete === id_paquete ? { ...p, ...paquete, productos } : p
+      );
+      set({ datapaquete: nuevaLista });
+
+      return { success: true };
+    } catch (error) {
+      console.error("Error al editar paquete:", error);
+      return { success: false, error: error.message };
+    } finally {
+      set({ isLoading: false }); // Desactivar indicador de carga
+    }
+  },
 }));

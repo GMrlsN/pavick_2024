@@ -19,7 +19,6 @@ export * from './components/organismos/Buscador';
 export * from './components/organismos/formularios/InputText';
 export * from './components/organismos/formularios/RegistrarAdmin';
 export * from './components/organismos/formularios/RegistrarCategorias';
-export * from './components/organismos/formularios/RegistrarPaquetes';
 export * from './components/organismos/formularios/RegistrarPersonal';
 export * from './components/organismos/formularios/RegistrarProductos';
 export * from './components/organismos/formularios/RegistratPaquetes';

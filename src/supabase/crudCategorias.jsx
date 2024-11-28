@@ -48,8 +48,9 @@ export async function eliminarCategoria(id) {
   // Paso 1: Desvincular los productos de la categoría
   const { data: updatedProducts, error: updateError } = await supabase
     .from('products')
-    .update({ category_id: null }) // Establecemos category_id como null
+    .update({ category_id: null}) // Establecemos category_id como null
     .eq('category_id', id); // Solo productos asociados con la categoría
+    
 
   if (updateError) {
     console.error("Error desvinculando productos de la categoría:", updateError);
