@@ -47,10 +47,10 @@ export async function EliminarProductos(id) {
   }
 
 // Editar un producto
-export async function EditarProductos(id,name,description,price,stock_quantity,category_id,is_active) {
+export async function EditarProductos(id,name,description,price,stock_quantity,category_id,is_active, image_id=4) {
   const { data, error } = await supabase
     .from("products")
-    .update({name,description,price,stock_quantity,category_id,is_active})
+    .update({name,description,price,stock_quantity,category_id,is_active, image_id:image_id || 1 })
     .eq("product_id", id);
 
     if (error) {
