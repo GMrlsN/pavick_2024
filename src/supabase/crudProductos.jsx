@@ -72,3 +72,16 @@ export async function BuscarProductos(p) {
 
   return { success: true, data };
 }
+
+export async function BuscarProductosPorID(id) {
+  const { data, error } = await supabase
+  .from("paquete_producto")
+  .select("*")
+  .eq("id_paquete",id);
+  if (error) {
+    console.error("Error al buscar productos:", error);
+    return { success: false, message: "Error al buscar productos", data: [] };
+  }
+
+  return { success: true, data };
+}
